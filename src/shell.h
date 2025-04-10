@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   shell.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alrey <alrey@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
+/*   Updated: 2025/04/10 15:59:02 by alrey            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SHELL_H
 # define SHELL_H
 
@@ -9,8 +21,22 @@
 
 typedef struct s_shell
 {
-	char *shell;
+	char	running;
+	char	*prompt;
+	char	**env;
+	char	*input;
+}			t_shell;
 
-}	t_shell;
+/*
+Bult in
+*/
+
+int	ft_env(t_shell *shell);
+
+int	ft_export(t_shell *shell);
+
+int	ft_exit(t_shell *shell);
+
+void lex(t_shell *shell);
 
 #endif
