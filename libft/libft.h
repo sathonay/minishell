@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 14:28:32 by alrey             #+#    #+#             */
-/*   Updated: 2025/01/03 15:57:42 by alrey            ###   ########.fr       */
+/*   Updated: 2025/04/11 06:39:19 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ int		ft_isprint(int c);
 size_t	ft_strlen(const char *str);
 
 char	*ft_strchr(const char *s, int c);
+
+char	*ft_strchrnul(const char *s, int c);
 
 char	*ft_strrchr(const char *s, int c);
 

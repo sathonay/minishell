@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/04/10 15:59:02 by alrey            ###   ########.fr       */
+/*   Updated: 2025/04/11 06:06:30 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,9 @@ int	ft_export(t_shell *shell);
 int	ft_exit(t_shell *shell);
 
 void lex(t_shell *shell);
+
+void ft_free(char **str);
+
+void ft_free_strs(char **strs);
 
 #endif

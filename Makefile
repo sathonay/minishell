@@ -1,6 +1,8 @@
 SRC_FOLDER	= src/
 SRC=	\
 	main.c \
+	lexer.c \
+	builtin.c \
 
 OBJ_FOLDER=objects/
 OBJ		= $(addprefix $(OBJ_FOLDER), $(SRC:.c=.o))
@@ -86,6 +88,8 @@ cat:
 all: $(NAME)
 
 re: cat clean all
+	@make --silent -C $(LIBFT_DIR) re
+	@make --silent -C $(PRINTF_DIR) re
 
 clean: cat 
 	$(call box, $(RED), CLEANING, 0)

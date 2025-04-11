@@ -6,13 +6,13 @@
 /*   By: alrey <alrey@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/04/10 15:58:49 by alrey            ###   ########.fr       */
+/*   Updated: 2025/04/11 06:06:43 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-static void ft_free(char **str)
+void ft_free(char **str)
 {
 	if (!str || !*str)
 		return ;
@@ -20,7 +20,7 @@ static void ft_free(char **str)
 	*str = NULL;
 }
 
-static void ft_free_strs(char **strs)
+void ft_free_strs(char **strs)
 {
 	size_t size;
 
@@ -65,10 +65,11 @@ int main(int argc, char **argv, char **env)
 		shell.input = readline(shell.prompt);
 		if (!shell.input)
 			break;
+		lex(&shell);
 		if (ft_strncmp(shell.input, "exit", 5) == 0)
 			shell.running = 0;
 		if (ft_strncmp(shell.input, "env", 4) == 0)
-			ft_env(shell);
+			ft_env(&shell);
 		if (ft_strncmp(shell.input, "export", 7) == 0)
 			ft_export(&shell);
 		add_history(shell.input);

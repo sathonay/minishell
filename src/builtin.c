@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:50 by alrey             #+#    #+#             */
-/*   Updated: 2025/04/10 15:50:09 by alrey            ###   ########.fr       */
+/*   Updated: 2025/04/11 06:08:16 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ int	ft_export(t_shell *shell)
 	return (0);	
 }
 
-ft_exit(t_shell *shell)
+int ft_exit(t_shell *shell)
 {
-		
+	(void)shell;
+	return (0);
 }
