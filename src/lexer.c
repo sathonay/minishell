@@ -9,8 +9,8 @@ static char	*ft_get_env(t_shell *shell, char *str, int size)
 	{
 		if (ft_strncmp(*env, str, size) == 0 && (*env)[size] == '=')
 		{
-			printf("%s\n",	(*env) + size);
-			return (ft_strdup((*env) + size));
+			write(1, (*env) + size + 1, ft_strlen((*env) + size + 1));
+			return (ft_strdup((*env) + size + 1));
 		}
 		env++;
 	}
@@ -21,29 +21,14 @@ static char *expand(t_shell *shell, char *input)
 {
 	char	*end;
 	char	*line;
-	size_t	word;
 
 	line = NULL;
-	end = input;
 	(void)shell;
 	(void)line;
-	while (*end && *end != ' ' && *end != '"' && *end != '$')
-		word++;
-	while (*input)
-	{
-		word = 0;
-		if (*input == '$')
-		{
-			input++;
-			while (input[word] && input[word] != ' ' && input[word] != '"')
-				word++;
-			printf("%p\n", ft_get_env(shell, input, word));
-			input += word;
-		}
-		if (*input == '"')
-			break ;
-		input++;
-	}
+	end = input;
+	while (end[1] && end[1] != ' ' && end[1] != '\''  && end[1] != '"' && end[1] != '$')
+		end++;
+	ft_get_env(shell, input, end - input + 1);
 	return (end);
 }
 
@@ -51,44 +36,38 @@ void lex(t_shell *shell)
 {
 	char	*input;
 	char	*close;
-	int		quotes[2];
 
-	quotes[0] = 0;
-	quotes[1] = 0;
 	input = shell->input;
 	while (*input)
 	{
 		close = NULL;	
 		if (*input == '"')
 		{
-			close = ft_strchr(input + 1, '"');
-			if (close != NULL)
-				write(1, input + 1, close - (input + 1));
+			close = ft_strchrnul(input + 1, '"');
+			while (++input < close)
+			{
+				if (*input == '$')
+					input = expand(shell, input + 1);
+				else
+					write(1, input, 1);
+			}
 		}
 		else if (*input == '\'')
 		{
-			close = ft_strchr(input + 1, '\'');
-			if (close != NULL)
-				write(1, input + 1, close - (input + 1));
+			close = ft_strchrnul(input + 1, '\'');
+			if (*close == '\'')
+			{
+				write(1, ++input, close - (input + 1));
+				input =	close + 1;
+			}
 		}
+		else if (*input == '$')
+			close = expand(shell, input + 1);
 		else
 			write(1, input, 1);
 		if (close != NULL)
 			input = close;
 		input++;
 	}
-//	while (*input)
-//	{
-//		if (*input == '$' && (quotes[0] % 2 || quotes[0] == 0) && !(quotes[1] % 2))
-//			expand(shell, input);
-//		else if (*input == '"')
-//			quotes[0] += 1;
-//		else if (*input == '\'')
-//			quotes[1] += -1;
-//		if (*input == '"' || *input == '\'')
-//			last_quote = *input;
-//		input++;
-//	}
-	printf("%d %d\n", quotes[0], quotes[1]);
 }
 
