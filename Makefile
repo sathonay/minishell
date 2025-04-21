@@ -3,6 +3,9 @@ SRC=	\
 	main.c \
 	lexer.c \
 	builtin.c \
+	environment.c \
+	syntax.c \
+	expand.c \
 
 OBJ_FOLDER=objects/
 OBJ		= $(addprefix $(OBJ_FOLDER), $(SRC:.c=.o))

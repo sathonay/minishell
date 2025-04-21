@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrey <alrey@student.42.fr>                +#+  +:+       +#+        */
+/*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/04/11 06:06:30 by alrey            ###   ########.fr       */
+/*   Updated: 2025/04/21 17:38:41 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,31 +16,89 @@
 # include "libft.h"
 # include <stdio.h>
 # include <stdlib.h>
+# include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
+typedef	struct s_lexer
+{
+
+}			t_lexer;
+
+enum	e_token_type
+{
+	STR,
+	QUOTE,
+	DQUOTE,
+	PIPE,
+	HERE_DOC,
+	I_FILE,
+	O_FILE,
+	O_FILE_APPEND,
+};
+
+typedef	struct s_token_stack
+{
+	
+}			t_token_stack;
+
+typedef struct s_here_doc
+{
+	int		fd[2];
+	char	*path;
+}			t_here_doc;
+
+typedef struct s_infile;
+{
+	int		fd[2];
+	char	*path;
+}			t_infile;
+
+typedef struct s_outfile;
+{
+	int		fd[2];
+	char	*path;
+}			t_infile;
+
+
+typedef struct s_command_stack
+{
+	t_here_doc	*here_doc;
+	t_infile	*infile;
+}			t_command_stack;
+
 typedef struct s_shell
 {
+	unsigned char exit_code;
 	char	running;
 	char	*prompt;
-	char	**env;
 	char	*input;
+	char	*line;
+	int		argc;
+	char	**argv;
+	char	**env;
 }			t_shell;
 
 /*
 Bult in
 */
 
-int	ft_env(t_shell *shell);
+int		ft_env(t_shell *shell);
 
-int	ft_export(t_shell *shell);
+int		ft_export(t_shell *shell);
 
-int	ft_exit(t_shell *shell);
+int		ft_exit(t_shell *shell);
 
-void lex(t_shell *shell);
+void	lex(t_shell *shell);
 
-void ft_free(char **str);
+void	ft_free(char **str);
 
-void ft_free_strs(char **strs);
+void	ft_free_strs(char **strs);
+
+char	*ft_get_env(t_shell *shell, char *str, int size);
+
+bool	syntax_valid(char *input);
+
+int expand(t_shell *shell);
 
 #endif

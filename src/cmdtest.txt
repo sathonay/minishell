@@ -1,1 +1,17 @@
 echo "'$USER'" '"$USER"' "'"$USER"'" '"'$USER'"'
+
+cat << EOF << OEF (perform the last heredoc reference)
+
+cat << EOF | cat << OEF (perform all heredocs seens there r not un the same command)
+
+< src/cmdtest.txt cat << EOF (infile than heredoc)
+
+<< EOF < src/cmdtest.txt cat (heredoc than infile)
+
+
+< test.txt cat << EOF (zsh: infile than heredoc, bash posix only the heredoc is taked)
+
+<< EOF < test.txt cat (heredoc than infile)
+
+date +%N > outfile1 > outfile2
+diff outfile1 outfile2 (zsh : should have no difference, bash posix: only the last one is writen but both are created)
