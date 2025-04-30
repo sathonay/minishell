@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/04/21 17:38:41 by alrey            ###   ########.fr       */
+/*   Updated: 2025/04/30 23:51:47 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,17 @@ typedef struct s_here_doc
 	char	*path;
 }			t_here_doc;
 
-typedef struct s_infile;
+typedef struct s_infile
 {
 	int		fd[2];
 	char	*path;
 }			t_infile;
 
-typedef struct s_outfile;
+typedef struct s_outfile
 {
 	int		fd[2];
 	char	*path;
-}			t_infile;
+}			t_outfile;
 
 
 typedef struct s_command_stack
