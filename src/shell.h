@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/04/30 23:51:47 by alrey            ###   ########.fr       */
+/*   Updated: 2025/05/04 17:54:27 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ typedef	struct s_lexer
 
 enum	e_token_type
 {
+	NONE,
+	EMPTY,
 	STR,
-	QUOTE,
-	DQUOTE,
 	PIPE,
 	HERE_DOC,
 	I_FILE,
@@ -39,7 +39,10 @@ enum	e_token_type
 
 typedef	struct s_token_stack
 {
-	
+	char					*start;
+	char					*end;
+	enum e_token_type		type;
+	struct s_token_stack	*next;
 }			t_token_stack;
 
 typedef struct s_here_doc
@@ -70,6 +73,7 @@ typedef struct s_command_stack
 typedef struct s_shell
 {
 	unsigned char exit_code;
+	t_token_stack	*tokens;
 	char	running;
 	char	*prompt;
 	char	*input;

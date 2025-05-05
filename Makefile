@@ -6,6 +6,8 @@ SRC=	\
 	environment.c \
 	syntax.c \
 	expand.c \
+	token.c \
+	tokenizer.c \
 
 OBJ_FOLDER=objects/
 OBJ		= $(addprefix $(OBJ_FOLDER), $(SRC:.c=.o))

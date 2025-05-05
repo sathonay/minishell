@@ -26,10 +26,13 @@ static bool	check_quotes(char *input)
 }
 //_______|____
 //___|___|____
+
 static bool	check_pipes(char *input)
 {
+	size_t	count;
 	bool	failed;
 
+	count = 0;
 	failed = 1;
 	while (*input && *input <= ' ')
 		input++;
@@ -40,7 +43,7 @@ static bool	check_pipes(char *input)
 		if (*input == '|')
 		{
 			failed = 1;
-			while (*input && *input <= ' ')
+			while (*input && *input <= ' ' && (*input != '|' && input[1] != '|'))
 				input++;
 			if (*input > ' ')	
 				failed = 0;
@@ -51,7 +54,6 @@ static bool	check_pipes(char *input)
 		dprintf(2, "syntax error: pipe not pipeing. 🥱");
 	return (failed);
 }
-
 
 bool syntax_valid(char *input)
 {
