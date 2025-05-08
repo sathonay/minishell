@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/05/04 17:54:27 by alrey            ###   ########.fr       */
+/*   Updated: 2025/05/08 14:51:06 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,15 +72,15 @@ typedef struct s_command_stack
 
 typedef struct s_shell
 {
-	unsigned char exit_code;
+	unsigned char	exit_code;
 	t_token_stack	*tokens;
-	char	running;
-	char	*prompt;
-	char	*input;
-	char	*line;
-	int		argc;
-	char	**argv;
-	char	**env;
+	char			running;
+	char			*prompt;
+	char			*input;
+	char			*line;
+	int				argc;
+	char			**argv;
+	char			**env;
 }			t_shell;
 
 /*

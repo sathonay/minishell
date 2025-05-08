@@ -1,6 +1,6 @@
 #include "shell.h"
 
-t_token_stack	new_token(char *start, char *end, enum e_token_type type)
+t_token_stack	*new_token(char *start, char *end, enum e_token_type type)
 {
 	t_token_stack	*token = malloc(sizeof(t_token_stack));
 	if (token == NULL)
@@ -11,13 +11,8 @@ t_token_stack	new_token(char *start, char *end, enum e_token_type type)
 	return (token);
 }
 //_____aaaabbcc_____|
-e_token_type str_or_empty_type(char *input)
-{
-	input
-	return ();
-}
 
-e_token_type to_token_type(char *input)
+enum e_token_type to_token_type(char *input)
 {
 	if (*input == '|')
 		return (PIPE);
@@ -29,11 +24,22 @@ e_token_type to_token_type(char *input)
 		return (O_FILE_APPEND);
 	else if (*input == '>')
 		return (O_FILE);
-	else if (*input <= ' ')
+	else if (*input && *input <= ' ')
 		return (EMPTY);
-	else if (*input > ' ' && < *input <= '~')
+	else if (*input > ' ' && *input < *input <= '~')
 		return (STR);
 	return (NONE);
+}
+
+int	get_token_length(enum e_token_type type)
+{
+	if (type == PIPE || type == O_FILE || type == I_FILE)
+		return (1);
+	else if (type == HERE_DOC || type == O_FILE_APPEND)
+		return (2);
+	else if (type == EMPTY || type == STR)
+		return (-1);
+	return (0);
 }
 
 int	extract_token(t_shell *shell, char **head)
@@ -41,8 +47,10 @@ int	extract_token(t_shell *shell, char **head)
 	t_token_stack	*token;
 
 	token = new_token(*head, *head, to_token_type(*head));
-	if (token == NULL)
+	if (token == NULL || token->type == NONE)
 		return (0);
+	*head = ++token->end;
+	printf("first %d\n", token->type);
 	if (token->type != STR && token->type != EMPTY)
 		return (1);
 	while (to_token_type(token->end) == STR
@@ -51,7 +59,8 @@ int	extract_token(t_shell *shell, char **head)
 		token->type = to_token_type(token->end);
 		token->end++;
 	}
-	head = token->end++;
+	printf("second %d\n", token->type);
+	*head = token->end;
 	return (1);
 }
 
@@ -60,9 +69,9 @@ int	tokenize(t_shell *shell)
 	char	*input;
 
 	if (!shell->input)
-		return ;
+		return 0;
 	input = shell->input;
-	while (*input && extract_token(input))
+	while (*input && extract_token(shell, &input))
 		;
 	return (*input == 0);
 }

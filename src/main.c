@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/05/04 18:27:00 by alrey            ###   ########.fr       */
+/*   Updated: 2025/05/07 20:18:00 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static void	run_loop(t_shell *shell)
 {
 	while (shell->running)
 	{
-		shell->token = NULL;
+		shell->tokens = NULL;
 		shell->input = readline(shell->prompt);
 		if (!shell->input)
 			break;
