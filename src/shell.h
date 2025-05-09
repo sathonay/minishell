@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/05/08 14:51:06 by alrey            ###   ########.fr       */
+/*   Updated: 2025/05/09 22:42:12 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ enum	e_token_type
 	NONE,
 	EMPTY,
 	STR,
+	QSTR,
+	DQSTR,
 	PIPE,
 	HERE_DOC,
 	I_FILE,
