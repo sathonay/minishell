@@ -1,37 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token.c                                            :+:      :+:    :+:   */
+/*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/04 17:46:40 by alrey             #+#    #+#             */
-/*   Updated: 2025/05/11 18:29:07 by alrey            ###   ########.fr       */
+/*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
+/*   Updated: 2025/05/11 21:42:57 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-void append_token(t_shell *shell, t_token_stack *token)
+void executor(t_shell *shell)
 {
-	t_token_stack **head = &shell->tokens;
-	while (*head)
-		head = &(*head)->next;
-	*head = token;
-}
 
-void free_token_stack(t_shell *shell)
-{
-	t_token_stack *token;
-
-	if (shell->tokens)
-	{
-		while (shell->tokens)
-		{
-			token = shell->tokens;
-			shell->tokens = token->next;
-			free(token);
-		}
-		shell->tokens = NULL;	
-	}
 }

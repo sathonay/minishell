@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/05/07 20:18:00 by alrey            ###   ########.fr       */
+/*   Updated: 2025/05/11 19:10:02 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,21 @@ static char **ft_strsdup(char **strs)
 	return (dup);
 }
 
+void print_token_stack(t_shell *shell)
+{
+	t_token_stack *token;
+	
+	token = shell->tokens;
+	while (token)
+	{
+		printf("size %d\n", token->end - token->start);
+		printf("type %d\n", token->type);
+		write(1, token->start, token->end - token->start);
+		write(1, "\n", 1);
+		token = token->next;
+	}
+}
+
 static void	run_loop(t_shell *shell)
 {
 	while (shell->running)
@@ -61,6 +76,7 @@ static void	run_loop(t_shell *shell)
 		shell->line = NULL;
 		//expand(shell);
 		printf("line : |%s|\n", shell->line);
+		print_token_stack(shell);
 		
 		if (ft_strncmp(shell->input, "exit", 5) == 0)
 			shell->running = 0;
@@ -70,7 +86,9 @@ static void	run_loop(t_shell *shell)
 			ft_export(shell);
 		add_history(shell->input);
 		ft_free(&shell->input);
+		free_token_stack(shell);
 	}
+	rl_clear_history();
 }
 
 int main(int argc, char **argv, char **env)
@@ -80,6 +98,7 @@ int main(int argc, char **argv, char **env)
 	if (argc > 1)
 		return(dprintf(2, "Why R u running my shell with args ?😱\n"), 1);
 	t_shell shell;
+
 	shell.running = 1;
 	shell.prompt = "mini@> ";
 	shell.env = ft_strsdup(env);

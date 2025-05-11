@@ -1,5 +1,15 @@
 #include "shell.h"
 
+int	get_token_length(enum e_token_type type)
+{
+	if (type == PIPE || type == O_FILE || type == I_FILE
+			|| type == STR || type == QSTR || type == DQSTR || type == EMPTY)
+		return (1);
+	else if (type == HERE_DOC || type == O_FILE_APPEND)
+		return (2);
+	return (0);
+}
+
 t_token_stack	*new_token(char *start, char *end, enum e_token_type type)
 {
 	t_token_stack	*token = malloc(sizeof(t_token_stack));
@@ -8,6 +18,7 @@ t_token_stack	*new_token(char *start, char *end, enum e_token_type type)
 	token->start = start;
 	token->end = end;
 	token->type = type;
+	token->next = NULL;
 	return (token);
 }
 //_____aaaabbcc_____|
@@ -24,43 +35,57 @@ enum e_token_type to_token_type(char *input)
 		return (O_FILE_APPEND);
 	else if (*input == '>')
 		return (O_FILE);
+	else if (*input == '\'')
+		return (QSTR);
+	else if (*input == '"')
+		return (DQSTR);
 	else if (*input && *input <= ' ')
 		return (EMPTY);
 	else if (*input > ' ' && *input < *input <= '~')
 		return (STR);
 	return (NONE);
 }
+// qsdqsd       qsdbbqsfkjh | qsdbhjqfg
+// ^    ^       ^         ^   ^       ^
+// "qsdqsd       qsdbbqsfkjh" | qsdbhjqfg
+// ^                        ^   ^       ^
+// 'qsdqsd       qsdbbqsfkjh' | qsdbhjqfg
+// ^                        ^   ^       ^
 
-int	get_token_length(enum e_token_type type)
+// 'qsdqsd       qsdbbqsfkjh' | qsdbhjqfg
+// ^                            ^        
+// L                          T R
+		
+static void print_token(t_token_stack token)
 {
-	if (type == PIPE || type == O_FILE || type == I_FILE)
-		return (1);
-	else if (type == HERE_DOC || type == O_FILE_APPEND)
-		return (2);
-	else if (type == EMPTY || type == STR)
-		return (-1);
-	return (0);
+	write(1, token.start, token.end - token.start);
+	write(1, "\n", 1);
 }
-
 int	extract_token(t_shell *shell, char **head)
 {
 	t_token_stack	*token;
 
-	token = new_token(*head, *head, to_token_type(*head));
+	token = new_token(*head, *head + 1, to_token_type(*head));
 	if (token == NULL || token->type == NONE)
 		return (0);
-	*head = ++token->end;
-	printf("first %d\n", token->type);
-	if (token->type != STR && token->type != EMPTY)
-		return (1);
-	while (to_token_type(token->end) == STR
-			|| to_token_type(token->end) == EMPTY)
-	{
-		token->type = to_token_type(token->end);
-		token->end++;
-	}
-	printf("second %d\n", token->type);
 	*head = token->end;
+	//printf("first %d %c\n", token->type, *token->start);
+	if (token->type == STR || token->type == EMPTY)
+	{
+		while (to_token_type(token->end) == token->type)
+			token->end++;
+		*head = token->end;
+	}
+	else if (token->type == DQSTR || token->type == QSTR)
+	{
+		token->start++;
+		while (to_token_type(token->end) != token->type)
+			token->end++;
+		*head = token->end + 1;
+	}
+	//printf("second %d %c\n", token->type, *token->end);
+	//print_token(*token);
+	append_token(shell, token);
 	return (1);
 }
 

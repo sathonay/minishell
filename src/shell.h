@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/05/09 22:42:12 by alrey            ###   ########.fr       */
+/*   Updated: 2025/05/11 18:20:27 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,10 @@ char	*ft_get_env(t_shell *shell, char *str, int size);
 
 bool	syntax_valid(char *input);
 
-int expand(t_shell *shell);
+int		expand(t_shell *shell);
+
+void	append_token(t_shell *shell, t_token_stack *token);
+
+void	free_token_stack(t_shell *shell);
 
 #endif
