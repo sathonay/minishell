@@ -1,6 +1,6 @@
 #include "shell.h"
 
-int	get_token_length(enum e_token_type type)
+static int	get_token_length(enum e_token_type type)
 {
 	if (type == PIPE || type == O_FILE || type == I_FILE
 			|| type == STR || type == QSTR || type == DQSTR || type == EMPTY)
@@ -10,7 +10,7 @@ int	get_token_length(enum e_token_type type)
 	return (0);
 }
 
-t_token_stack	*new_token(char *start, char *end, enum e_token_type type)
+static t_token_stack	*new_token(char *start, char *end, enum e_token_type type)
 {
 	t_token_stack	*token = malloc(sizeof(t_token_stack));
 	if (token == NULL)
@@ -21,9 +21,8 @@ t_token_stack	*new_token(char *start, char *end, enum e_token_type type)
 	token->next = NULL;
 	return (token);
 }
-//_____aaaabbcc_____|
 
-enum e_token_type to_token_type(char *input)
+static enum e_token_type to_token_type(char *input)
 {
 	if (*input == '|')
 		return (PIPE);
@@ -45,23 +44,8 @@ enum e_token_type to_token_type(char *input)
 		return (STR);
 	return (NONE);
 }
-// qsdqsd       qsdbbqsfkjh | qsdbhjqfg
-// ^    ^       ^         ^   ^       ^
-// "qsdqsd       qsdbbqsfkjh" | qsdbhjqfg
-// ^                        ^   ^       ^
-// 'qsdqsd       qsdbbqsfkjh' | qsdbhjqfg
-// ^                        ^   ^       ^
 
-// 'qsdqsd       qsdbbqsfkjh' | qsdbhjqfg
-// ^                            ^        
-// L                          T R
-		
-static void print_token(t_token_stack token)
-{
-	write(1, token.start, token.end - token.start);
-	write(1, "\n", 1);
-}
-int	extract_token(t_shell *shell, char **head)
+static int	extract_token(t_shell *shell, char **head)
 {
 	t_token_stack	*token;
 
@@ -69,7 +53,6 @@ int	extract_token(t_shell *shell, char **head)
 	if (token == NULL || token->type == NONE)
 		return (0);
 	*head = token->end;
-	//printf("first %d %c\n", token->type, *token->start);
 	if (token->type == STR || token->type == EMPTY)
 	{
 		while (to_token_type(token->end) == token->type)
@@ -83,8 +66,6 @@ int	extract_token(t_shell *shell, char **head)
 			token->end++;
 		*head = token->end + 1;
 	}
-	//printf("second %d %c\n", token->type, *token->end);
-	//print_token(*token);
 	append_token(shell, token);
 	return (1);
 }

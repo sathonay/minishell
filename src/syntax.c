@@ -22,7 +22,7 @@ static bool	check_quotes(char *input)
 	}
 	if (failed)
 		dprintf(2, "syntax error: quote not quoting properly. 🥱");
-	return (failed);
+	return (!failed);
 }
 //_______|____
 //___|___|____
@@ -30,32 +30,30 @@ static bool	check_quotes(char *input)
 static bool	check_pipes(char *input)
 {
 	size_t	count;
-	bool	failed;
+	bool	pipe_presence;
 
 	count = 0;
-	failed = 1;
-	while (*input && *input <= ' ')
-		input++;
-	if (*input > ' ')	
-		failed = 0;
+	pipe_presence = 0;
 	while (*input)
 	{
 		if (*input == '|')
 		{
-			failed = 1;
-			while (*input && *input <= ' ' && (*input != '|' && input[1] != '|'))
-				input++;
-			if (*input > ' ')	
-				failed = 0;
+			pipe_presence = 1;
+			if (count == 0)
+				break;
+			count = 0;
 		}
+		else if (*input && *input > ' ')
+			count++;
 		input++;
 	}
-	if (failed)
+	printf("count: %d", count);
+	if (pipe_presence && !count)
 		dprintf(2, "syntax error: pipe not pipeing. 🥱");
-	return (failed);
+	return (!pipe_presence ||  count > 0);
 }
 
 bool syntax_valid(char *input)
 {
-	return (!check_quotes(input) && !check_pipes(input));
+	return (check_quotes(input) && check_pipes(input));
 }

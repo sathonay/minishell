@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/05/11 19:10:02 by alrey            ###   ########.fr       */
+/*   Updated: 2025/05/13 17:54:37 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,8 @@ static void	run_loop(t_shell *shell)
 		shell->input = readline(shell->prompt);
 		if (!shell->input)
 			break;
-		tokenize(shell);
-		//if (!syntax_valid(shell->input))
-		//	dprintf(2, "syntax failed\n");
+		if (syntax_valid(shell->input))
+			tokenize(shell);
 		shell->line = NULL;
 		//expand(shell);
 		printf("line : |%s|\n", shell->line);
