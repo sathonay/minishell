@@ -41,7 +41,7 @@ enum e_token_type to_token_type(char *input)
 		return (DQSTR);
 	else if (*input && *input <= ' ')
 		return (EMPTY);
-	else if (*input > ' ' && *input < *input <= '~')
+	else if (*input > ' ' && *input <= '~')
 		return (STR);
 	return (NONE);
 }

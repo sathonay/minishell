@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/05/11 18:20:27 by alrey            ###   ########.fr       */
+/*   Updated: 2025/05/13 17:27:42 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,17 @@ bool	syntax_valid(char *input);
 
 int		expand(t_shell *shell);
 
+/*
+	token.c
+*/
+
 void	append_token(t_shell *shell, t_token_stack *token);
 
 void	free_token_stack(t_shell *shell);
+
+/*
+	tokenizer.c
+*/
+int		tokenize(t_shell *shell);
 
 #endif
