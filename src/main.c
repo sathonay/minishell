@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/05/13 17:54:37 by alrey            ###   ########.fr       */
+/*   Updated: 2025/05/17 00:29:58 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,11 @@ static void	run_loop(t_shell *shell)
 		shell->input = readline(shell->prompt);
 		if (!shell->input)
 			break;
-		if (syntax_valid(shell->input))
-			tokenize(shell);
+		//if (syntax_valid(shell->input))
+		if (!tokenize(shell))
+		{
+			printf("tokeninzation failed");
+		}
 		shell->line = NULL;
 		//expand(shell);
 		printf("line : |%s|\n", shell->line);
