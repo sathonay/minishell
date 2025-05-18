@@ -29,3 +29,13 @@ bool	environement_format(char *input, size_t size)
 	}	
 	return (size == 0);
 }
+
+bool	environement_set(char *key, char *value)
+{
+	
+}
+
+char	**environement_toarray(t_shell *shell)
+{
+	
+}

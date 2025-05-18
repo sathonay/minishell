@@ -6,33 +6,33 @@
 /*   By: alrey <alrey@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:50 by alrey             #+#    #+#             */
-/*   Updated: 2025/04/11 06:08:16 by alrey            ###   ########.fr       */
+/*   Updated: 2025/05/18 15:57:25 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-int	ft_env(t_shell *shell)
+int	ft_env(int argc, char **argv, char**env)
 {
-	if (!shell->env)
+	if (!env)
 		return (0);
-	while(*shell->env)
-		printf("%s\n", *(shell->env++));
+	while(*env)
+		printf("%s\n", *(env++));
 	return (0);
 }
 
 int	ft_export(t_shell *shell)
 {
-	char **dup;
-	size_t size;
+	char	**dup;
+	size_t	size;
 
 	size = 0;
 	while (shell->env[size])
 		size++;
 	dup = malloc((1 + size + 1) * sizeof(char *));
-	dup[0] = ft_strjoin("TEST=", "coucou");
 	if (!dup)
 		return (1);
+	dup[0] = ft_strjoin("TEST=", "coucou");
 	dup[size + 1] = NULL;
 	while (size--)
 		dup[size + 1] = ft_strdup(shell->env[size]);

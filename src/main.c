@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/05/17 00:29:58 by alrey            ###   ########.fr       */
+/*   Updated: 2025/05/18 15:57:59 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static void	run_loop(t_shell *shell)
 		if (ft_strncmp(shell->input, "exit", 5) == 0)
 			shell->running = 0;
 		if (ft_strncmp(shell->input, "env", 4) == 0)
-			ft_env(shell);
+			ft_env(1, "env", shell->env);
 		if (ft_strncmp(shell->input, "export", 7) == 0)
 			ft_export(shell);
 		add_history(shell->input);
