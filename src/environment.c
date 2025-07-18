@@ -30,6 +30,11 @@ bool	environement_format(char *input, size_t size)
 	return (size == 0);
 }
 
+bool environement_contains(t_shell *shell, char *key)
+{
+
+}
+
 bool	environement_set(char *key, char *value)
 {
 	

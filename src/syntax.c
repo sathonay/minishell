@@ -24,8 +24,6 @@ static bool	check_quotes(char *input)
 		dprintf(2, "syntax error: quote not quoting properly. 🥱");
 	return (!failed);
 }
-//_______|____
-//___|___|____
 
 static bool	check_pipes(char *input)
 {
