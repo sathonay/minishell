@@ -8,6 +8,7 @@ SRC=	\
 	expand.c \
 	token.c \
 	tokenizer.c \
+	free.c \
 
 OBJ_FOLDER=objects/
 OBJ		= $(addprefix $(OBJ_FOLDER), $(SRC:.c=.o))
@@ -22,7 +23,7 @@ LIBFT_LIB=$(LIBFT_DIR)libft.a
 PRINTF_DIR=printf/
 PRINTF_LIB=$(PRINTF_DIR)libftprintf.a
 
-HEADERS= $(SRC_FOLDER) $(LIBFT_DIR) $(PRINTF_DIR)include/
+HEADERS= $(SRC_FOLDER) $(SRC_FOLDER)libshell $(LIBFT_DIR) $(PRINTF_DIR)include/
 INCLUDES=$(addprefix -I , $(HEADERS))
 
 LIBS=$(LIBFT_LIB) $(PRINTF_LIB) -lreadline
