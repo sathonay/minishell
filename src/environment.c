@@ -30,17 +30,16 @@ bool	environement_format(char *input, size_t size)
 	return (size == 0);
 }
 
-bool environement_contains(t_shell *shell, char *key)
+char	*env_get(char **env, char *var)
 {
+	size_t	len;
 
-}
-
-bool	environement_set(char *key, char *value)
-{
-	
-}
-
-char	**environement_toarray(t_shell *shell)
-{
-	
+	len = ft_strlen(var);
+	while (*env)
+	{
+		if (ft_strncmp(*env, var, len) == 0 && (*env)[len] == '=')
+			return (*env + len + 1);
+		env++;
+	}
+	return (NULL);
 }

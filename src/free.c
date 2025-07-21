@@ -1,33 +1,47 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token.c                                            :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/04 17:46:40 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/21 17:41:08 by alrey            ###   ########.fr       */
+/*   Created: 2025/07/20 00:38:20 by alrey             #+#    #+#             */
+/*   Updated: 2025/07/21 15:30:21 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-void append_token(t_shell *shell, t_token_stack *token)
+void	free_str(char **str)
 {
-	t_token_stack **head = &shell->tokens;
-	while (*head)
-		head = &(*head)->next;
-	*head = token;
+	if (*str)
+		free(*str);
+	*str = NULL;
 }
 
-t_token_stack	*get_next_token(t_token_stack *token, enum e_token_type type)
+void	free_str_array(char **strs)
 {
-	token = token;
-	while (token && token->type != NONE)
+	size_t	i;
+
+	i = 0;
+	while (strs && strs[i])
+		free(strs[i++]);
+	if (strs)
+		free(strs);
+}
+
+void free_token_stack(t_shell *shell)
+{
+	t_token_stack *token;
+
+	if (shell->tokens)
 	{
-		if ((token->type & type) > 0)
-			return (token);
-		token = token->next;
+		while (shell->tokens)
+		{
+			token = shell->tokens;
+			shell->tokens = token->next;
+			free(token);
+		}
+		shell->tokens = NULL;	
 	}
-	return (NULL);
 }

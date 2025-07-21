@@ -6,29 +6,11 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/16 09:19:07 by alrey            ###   ########.fr       */
+/*   Updated: 2025/07/21 17:40:39 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
-
-void ft_free(char **str)
-{
-	if (!str || !*str)
-		return ;
-	free(*str);
-	*str = NULL;
-}
-
-void ft_free_strs(char **strs)
-{
-	size_t size;
-
-	size = 0;
-	while (strs[size])
-		free(strs[size++]);
-	free(strs);
-}
 
 static char **ft_strsdup(char **strs)
 {
@@ -62,6 +44,31 @@ void print_token_stack(t_shell *shell)
 	}
 }
 
+char *get_token_str_type(t_token_type type)
+{
+	if (type == NONE)
+		return ("NONE");
+	if (type == EMPTY)
+		return ("EMPTY");
+	if (type == STR)
+		return ("STR");
+	if (type == QSTR)
+		return ("QSTR");
+	if (type == DQSTR)
+		return ("DQSTR");
+	if (type == PIPE)
+		return ("PIPE");
+	if (type == HERE_DOC)
+		return ("HERE_DOC");
+	if (type == I_FILE)
+		return ("I_FILE");
+	if (type == O_FILE)
+		return ("O_FILE");
+	if (type == O_FILE_APPEND)
+		return ("O_FILE_APPEND");
+	return (NULL);
+}
+
 static void	run_loop(t_shell *shell)
 {
 	while (shell->running)
@@ -79,6 +86,19 @@ static void	run_loop(t_shell *shell)
 		//expand(shell);
 		printf("line : |%s|\n", shell->line);
 		print_token_stack(shell);
+		t_token_stack *token;
+
+		token = shell->tokens;
+		while (token)
+		{
+			printf("token type: %s\n", get_token_str_type(token->type));
+			token = token->next;
+		}
+		
+		if (get_next_token(shell->tokens, DQSTR))
+		{
+			printf("found dqstr\n");
+		}
 		
 		if (ft_strncmp(shell->input, "exit", 5) == 0)
 			shell->running = 0;
@@ -87,7 +107,7 @@ static void	run_loop(t_shell *shell)
 		if (ft_strncmp(shell->input, "export", 7) == 0)
 			ft_export(shell);
 		add_history(shell->input);
-		ft_free(&shell->input);
+		free_str(&shell->input);
 		free_token_stack(shell);
 	}
 	rl_clear_history();
@@ -106,7 +126,7 @@ int main(int argc, char **argv, char **env)
 	shell.env = ft_strsdup(env);
 	shell.input = NULL;
 	run_loop(&shell);
-	ft_free(&shell.input);
-	ft_free_strs(shell.env);
+	free_str(&shell.input);
+	free_str_array(shell.env);
 	rl_clear_history();
 }

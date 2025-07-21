@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/18 09:14:10 by alrey            ###   ########.fr       */
+/*   Updated: 2025/07/21 17:37:21 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,19 @@ typedef	struct s_lexer
 
 enum	e_token_type
 {
-	NONE			= 0x0000000000,
-	EMPTY			= 0x0000000010,
-	STR				= 0x0000000100,
-	QSTR			= 0x0000001000,
-	DQSTR			= 0x0000010000,
-	PIPE			= 0x0000100000,
-	HERE_DOC		= 0x0001000000,
-	I_FILE			= 0x0010000000,
-	O_FILE			= 0x0100000000,
-	O_FILE_APPEND	= 0x1000000000,
+	NONE			= 0b0000000000,
+	EMPTY			= 0b0000000010,
+	STR				= 0b0000000100,
+	QSTR			= 0b0000001000,
+	DQSTR			= 0b0000010000,
+	PIPE			= 0b0000100000,
+	HERE_DOC		= 0b0001000000,
+	I_FILE			= 0b0010000000,
+	O_FILE			= 0b0100000000,
+	O_FILE_APPEND	= 0b1000000000,
 };
+
+typedef enum e_token_type t_token_type;
 
 typedef	struct s_token_stack
 {
@@ -99,10 +101,6 @@ int		ft_exit(t_shell *shell);
 
 void	lex(t_shell *shell);
 
-void	ft_free(char **str);
-
-void	ft_free_strs(char **strs);
-
 char	*ft_get_env(t_shell *shell, char *str, int size);
 
 bool	syntax_valid(char *input);
@@ -115,7 +113,12 @@ int		expand(t_shell *shell);
 
 void	append_token(t_shell *shell, t_token_stack *token);
 
-to_token_stack	*get_next_token(to_token_stack *token, e_token_type type);
+t_token_stack	*get_next_token(t_token_stack *token, enum e_token_type type);
+
+
+void	free_str(char **str);
+
+void	free_str_array(char **strs);
 
 void	free_token_stack(t_shell *shell);
 
@@ -124,5 +127,7 @@ void	free_token_stack(t_shell *shell);
 */
 
 int		tokenize(t_shell *shell);
+
+char	*find_exec(char *exec, char **env);
 
 #endif

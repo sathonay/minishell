@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/18 09:15:01 by alrey            ###   ########.fr       */
+/*   Updated: 2025/07/21 15:27:31 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void tokens_to_commands(t_shell *shell) {
 	}
 }*/
 
-static t_token_stack	*extract_command(to_token_stack *token)
+static t_token_stack	*extract_command(t_token_stack *token)
 {
 	while (token->type != NONE || token->type != PIPE)
 	{
@@ -50,13 +50,5 @@ static t_token_stack	*extract_command(to_token_stack *token)
 
 void executor(t_shell *shell)
 {
-	t_command command;
-	t_token_stack token;
-
-	token = shell->tokens;
-	while (token)
-	{
-		
-	}
-	if (command.args[0])
+	
 }

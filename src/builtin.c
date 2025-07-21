@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrey <alrey@student.42.fr>                +#+  +:+       +#+        */
+/*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:50 by alrey             #+#    #+#             */
-/*   Updated: 2025/05/18 15:57:25 by alrey            ###   ########.fr       */
+/*   Updated: 2025/07/21 15:33:30 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	ft_export(t_shell *shell)
 	dup[size + 1] = NULL;
 	while (size--)
 		dup[size + 1] = ft_strdup(shell->env[size]);
-	ft_free_strs(shell->env);
+	free_str_array(shell->env);
 	shell->env = dup;
 	return (0);	
 }
