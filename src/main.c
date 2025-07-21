@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/21 17:40:39 by alrey            ###   ########.fr       */
+/*   Updated: 2025/07/21 20:05:58 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,18 @@ static void	run_loop(t_shell *shell)
 			printf("token type: %s\n", get_token_str_type(token->type));
 			token = token->next;
 		}
+
+		printf("------------------\n");
+
+		token = shell->tokens;
+		while (token)
+		{
+			token = get_next_token(token, STR | QSTR | DQSTR);
+			printf("token type: %s\n", get_token_str_type(token->type));
+			token = token->next;
+		}
+
+		printf("------------------\n");
 		
 		if (get_next_token(shell->tokens, DQSTR))
 		{
