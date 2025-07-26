@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/21 21:35:13 by alrey            ###   ########.fr       */
+/*   Updated: 2025/07/25 22:37:34 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,11 @@ static void	run_loop(t_shell *shell)
 		{
 			token = get_first_token(token, STR | QSTR | DQSTR);
 			printf("token type: %s\n", get_token_str_type(token->type));
+			while (token->next && (token->next->type & (STR | QSTR | DQSTR)) > 0)
+			{
+				printf("linking token type: %s\n", get_token_str_type(token->next->type));
+				token = token->next;
+			}
 			token = token->next;
 		}
 
