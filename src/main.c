@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/29 19:35:22 by alrey            ###   ########.fr       */
+/*   Updated: 2025/07/29 19:51:41 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static char **ft_strsdup(char **strs)
 	return (dup);
 }
 
-static void print_token_stack(t_shell *shell)
+void print_token_stack(t_shell *shell)
 {
 	t_token_stack *token;
 	
@@ -38,10 +38,11 @@ static void print_token_stack(t_shell *shell)
 	{
 		printf("size %ld\n", token->end - token->start);
 		printf("type %d\n", token->type);
+		write(1, token->start, token->end - token->start);
+		write(1, "\n", 1);
 		token = token->next;
 	}
 }
-
 static void	run_loop(t_shell *shell)
 {
 	while (shell->running)
