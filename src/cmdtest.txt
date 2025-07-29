@@ -8,9 +8,8 @@ cat << EOF | cat << OEF (perform all heredocs seens there r not un the same comm
 
 << EOF < src/cmdtest.txt cat (heredoc than infile)
 
-
 < test.txt cat << EOF (zsh: infile than heredoc, bash posix only the heredoc is taked)
-
+< test.txt cat << EOF
 << EOF < test.txt cat (heredoc than infile)
 
 date +%N > outfile1 > outfile2

@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/21 21:04:33 by alrey            ###   ########.fr       */
+/*   Updated: 2025/07/29 19:38:01 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,14 @@ typedef struct s_shell
 	char			**env;
 }			t_shell;
 
+
+/*
+	Libft+
+*/
+
+
+char	*ft_strldup(const char *s1, size_t len);
+
 /*
 Bult in
 */
@@ -111,9 +119,11 @@ int		expand(t_shell *shell);
 	token.c
 */
 
-void	append_token(t_shell *shell, t_token_stack *token);
+void			append_token(t_shell *shell, t_token_stack *token);
 
 t_token_stack	*get_first_token(t_token_stack *token, t_token_type type);
+
+char			*get_token_str_type(t_token_type type);
 
 
 void	free_str(char **str);
@@ -129,5 +139,7 @@ void	free_token_stack(t_shell *shell);
 int		tokenize(t_shell *shell);
 
 char	*find_exec(char *exec, char **env);
+
+void	expander(t_shell *shell);
 
 #endif

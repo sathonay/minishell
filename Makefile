@@ -1,6 +1,5 @@
 SRC_FOLDER	= src/
-SRC=	\
-	main.c \
+SRC=main.c \
 	lexer.c \
 	builtin.c \
 	environment.c \
@@ -8,13 +7,15 @@ SRC=	\
 	expand.c \
 	token.c \
 	tokenizer.c \
+	expander.c \
 	free.c \
+	ft_strldup.c \
 
 OBJ_FOLDER=objects/
 OBJ		= $(addprefix $(OBJ_FOLDER), $(SRC:.c=.o))
 
 
-CC = cc
+CC = clang
 FLAGS=#-Wall -Wextra -Werror
 
 LIBFT_DIR=libft/
@@ -44,7 +45,7 @@ WHITE	= \x1b[1;37m
 
 BORDER_C = $(PURPLE)
 
-OVERLAP = 3
+OVERLAP = 0
 
 CAT_C = $(PURPLE)
 CATE_C = $(RED)
