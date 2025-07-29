@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/29 19:38:01 by alrey            ###   ########.fr       */
+/*   Updated: 2025/07/30 00:37:00 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ int		ft_exit(t_shell *shell);
 
 void	lex(t_shell *shell);
 
-char	*ft_get_env(t_shell *shell, char *str, int size);
+char	*ft_get_env(t_shell *shell, char *str, size_t size);
 
 bool	syntax_valid(char *input);
 

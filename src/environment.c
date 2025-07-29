@@ -1,13 +1,13 @@
 #include "shell.h"
 
-char	*ft_get_env(t_shell *shell, char *str, int size)
+char	*ft_get_env(t_shell *shell, char *str, size_t size)
 {
 	char **env;
 
 	env = shell->env;
 	while(*env)	
 	{
-		if (ft_strncmp(*env, str, size) == 0 && (*env)[size] == '=')
+		if ((*env)[size] == '=' && ft_strncmp(*env, str, size) == 0)
 			return (ft_strdup((*env) + size + 1));
 		env++;
 	}

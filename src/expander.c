@@ -12,38 +12,45 @@
 
 #include "shell.h"
 
-static char	*str_concat_consume(char *str1, char *str2, bool str_to_consome)
+static char	*str_concat_consume(char *str1, char *str2, int str_to_consome)
 {
 	char	*concat;
 	
 	concat = ft_strjoin(str1, str2);
-	if (str_to_consome)
-		free(str2);
-	else
-		free(str1);
+	if (str_to_consome == 2)
+	{
+		free_str(&str2);
+		free_str(&str1);
+	}
+	else if (str_to_consome == 1)
+		free_str(&str2);
+	else if (str_concat_consume == 0)
+		free_str(&str1);
 	return (concat);
 } 
 
-static char	*expand_env_var(t_token_stack *token)
+static char	*expand_env_var(t_shell *shell, t_token_stack *token)
 {
 	char	*token_str;
 	size_t	l;
 	char	*str;
 
-	str = ft_calloc(1, sizeof(char));
+	str = NULL;
 	token_str = token->start;
 	while (token_str < token->end)
 	{
 		if (*token_str == '$') {
-			token++;
+			token_str++;
 			l = 0;
-			while (ft_isalnum(token_str[l]) && token_str[l] == '_')
+			while (ft_isalnum(token_str[l]) || token_str[l] == '_')
 				l++;
-			//TODO concat env var str = str_concat_consume(str, ft_strldup(token_str, 1));
+			
+			printf("env: %s\n", ft_get_env(shell, token_str, l));
+			str = str_concat_consume(str, ft_get_env(shell, token_str, l), 2);
 			token_str += l;
 		}
 		else
-			str = str_concat_consume(str, ft_substr(token_str, 0, 1), 1);
+			str = str_concat_consume(str, ft_substr(token_str, 0, 1), 2);
 		token_str++;
 	}
 	printf("expand_var_res: %s\n", str);
@@ -53,19 +60,22 @@ static char	*expand_env_var(t_token_stack *token)
 void	expander(t_shell *shell)
 {
 	t_token_stack	*token;
+	t_list			*argv;
 	char			*str;
 
+	str = NULL;
 	token = shell->tokens;
 	if (!token)
 		return ;
 	while (token)
 	{
 		token = get_first_token(token, STR | QSTR | DQSTR);
-		printf("token type: %s\n", get_token_str_type(token->type));
-		str = expand_env_var(token);
+		if (!token)
+			return ;
+		str = expand_env_var(shell, token);
 		while (token->next && (token->next->type & (STR | QSTR | DQSTR)) > 0)
 		{
-			str = ft_strjoin(str, expand_env_var(token->next));
+			str = ft_strjoin(str, expand_env_var(shell, token->next));
 			token = token->next;
 		}
 		printf("linked str: %s\n", str);

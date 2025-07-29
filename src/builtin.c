@@ -6,13 +6,13 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:50 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/21 15:33:30 by alrey            ###   ########.fr       */
+/*   Updated: 2025/07/29 22:48:27 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-int	ft_env(int argc, char **argv, char**env)
+int	ft_env(int argc, char **argv, char **env)
 {
 	if (!env)
 		return (0);
