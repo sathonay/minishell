@@ -1,10 +1,7 @@
 SRC_FOLDER	= src/
 SRC=main.c \
-	lexer.c \
 	builtin.c \
 	environment.c \
-	syntax.c \
-	expand.c \
 	token.c \
 	tokenizer.c \
 	expander.c \
@@ -17,7 +14,7 @@ OBJ		= $(addprefix $(OBJ_FOLDER), $(SRC:.c=.o))
 
 
 CC = clang
-FLAGS=#-Wall -Wextra -Werror
+FLAGS=-Wall -Wextra -Werror -fsanitize=address
 
 LIBFT_DIR=libft/
 LIBFT_LIB=$(LIBFT_DIR)libft.a
@@ -68,7 +65,7 @@ $(OBJ_FOLDER)%.o: $(SRC_FOLDER)%.c
 
 $(NAME): $(LIBS) $(OBJ) | cat
 	$(call box, $(YELLOW), BUILDING EXECUTABLE..., 0)
-	@$(CC) $(OBJ) $(LIBS) -o $@
+	@$(CC) $(FLAGS) $(OBJ) $(LIBS) -o $@
 	$(call box, $(GREEN), BUILDING EXECUTABLE, $(OVERLAP))
 
 
