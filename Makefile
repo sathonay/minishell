@@ -9,6 +9,7 @@ SRC=main.c \
 	tokenizer.c \
 	expander.c \
 	free.c \
+	find_exec.c \
 	ft_strldup.c \
 
 OBJ_FOLDER=objects/
@@ -73,7 +74,7 @@ $(NAME): $(LIBS) $(OBJ) | cat
 
 $(LIBFT_LIB): | cat
 	$(call box, $(YELLOW), BUILDING LIBFT..., 0)
-	@make --silent -C $(LIBFT_DIR)
+	@make --silent -C $(LIBFT_DIR) bonus
 	$(call box, $(GREEN), LIBFT BUILD SUCCESS, $(OVERLAP))
 
 $(PRINTF_LIB): | cat
@@ -94,9 +95,7 @@ cat:
 
 all: $(NAME)
 
-re: cat clean all
-	@make --silent -C $(LIBFT_DIR) re
-	@make --silent -C $(PRINTF_DIR) re
+re: cat fclean all
 
 clean: cat 
 	$(call box, $(RED), CLEANING, 0)
