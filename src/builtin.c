@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:50 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/29 22:48:27 by alrey            ###   ########.fr       */
+/*   Updated: 2025/07/30 08:01:36 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,33 @@ int	ft_export(t_shell *shell)
 	return (0);	
 }
 
+int	ft_pwd(int argc, char **argv, char **env)
+{
+	char	*path; 
+
+	path = getcwd(NULL, 0);
+	if (!path)
+		return (1);
+	printf("%s\n", path);
+	free(path);
+	return (0);
+}
+
+int	ft_cd(int argc, char **argv, char **env)
+{
+	char	*path; 
+
+	if (chdir(argv[1]))
+		printf("cd: %s: %s\n", strerror(errno), argv[1]);
+	return (0);
+}
+
 int ft_exit(t_shell *shell)
 {
 	(void)shell;
+	free_str(&shell->input);
+	free_token_stack(shell);
+	rl_clear_history();
+	exit(0);
 	return (0);
 }

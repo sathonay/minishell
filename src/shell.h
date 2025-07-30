@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/30 00:37:00 by alrey            ###   ########.fr       */
+/*   Updated: 2025/07/30 06:38:27 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/wait.h>
+# include <errno.h>
 
 typedef	struct s_lexer
 {
@@ -104,6 +106,10 @@ Bult in
 int		ft_env(int argc, char **argv, char**env);
 
 int		ft_export(t_shell *shell);
+
+int		ft_cd(int argc, char **argv, char **env);
+
+int		ft_pwd(int argc, char **argv, char **env);
 
 int		ft_exit(t_shell *shell);
 

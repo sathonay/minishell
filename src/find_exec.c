@@ -6,11 +6,25 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 00:40:42 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/30 00:36:11 by alrey            ###   ########.fr       */
+/*   Updated: 2025/07/30 06:28:05 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
+
+static char	*find_env_var(char *var, char **env)
+{
+	size_t	len;
+
+	len = ft_strlen(var);
+	while (*env)
+	{
+		if (ft_strncmp(*env, var, len) == 0 && (*env)[len] == '=')
+			return (*env + len + 1);
+		env++;
+	}
+	return (NULL);
+}
 
 char	*find_exec(char *exec, char **env)
 { 
