@@ -46,11 +46,12 @@ static char	*expand_env_var(t_shell *shell, t_token_stack *token)
 			l = 0;
 			while (ft_isalnum(token_str[l]) || token_str[l] == '_')
 				l++;
+			if (*token_str == '?')
+				l++;
 			str = str_concat_consume(str, ft_get_env(shell, token_str, l), 2);
 			token_str += l;
 		}
-		else
-			str = str_concat_consume(str, ft_substr(token_str, 0, 1), 2);
+		str = str_concat_consume(str, ft_substr(token_str, 0, 1), 2);
 		token_str++;
 	}
 	return (str);

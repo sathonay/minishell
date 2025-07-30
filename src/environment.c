@@ -4,6 +4,8 @@ char	*ft_get_env(t_shell *shell, char *str, size_t size)
 {
 	char **env;
 
+	if (size == 1 && *str == '?')
+		return (ft_strdup("!TODO EXITE CODE!"));
 	env = shell->env;
 	while(*env)	
 	{
