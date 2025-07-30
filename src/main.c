@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/30 08:33:58 by alrey            ###   ########.fr       */
+/*   Updated: 2025/07/30 08:53:45 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static char	*str_concat_consume(char *str1, char *str2, int str_to_consome)
 	}
 	else if (str_to_consome == 1)
 		free_str(&str2);
-	else if (str_concat_consume == 0)
+	else if (str_to_consome == 0)
 		free_str(&str1);
 	return (concat);
 } 
@@ -85,6 +85,8 @@ char	*prompt(t_shell *shell)
 	else
 		prompt = ft_strjoin(prompt, path);
 	prompt = str_concat_consume(prompt, "$ ", 0);
+	free_str(&shell->prompt);
+	shell->prompt = prompt;
 	return (free_str(&user), free_str(&home), free_str(&path), prompt);
 }
 
@@ -130,6 +132,7 @@ static void	run_loop(t_shell *shell)
 		if (ft_strncmp(shell->input, "export", 7) == 0)
 			ft_export(shell);
 		add_history(shell->input);
+		free_str(&shell->prompt);
 		free_str(&shell->input);
 		free_token_stack(shell);
 	}
@@ -147,7 +150,7 @@ int main(int argc, char **argv, char **env)
 	printf("WELCOME TO MiNI@\n\n");
 
 	shell.running = 1;
-	shell.prompt = "mini@> ";
+	shell.prompt = NULL;
 	shell.env = ft_strsdup(env);
 	shell.input = NULL;
 	run_loop(&shell);

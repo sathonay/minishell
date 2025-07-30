@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:50 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/30 08:01:36 by alrey            ###   ########.fr       */
+/*   Updated: 2025/07/30 08:44:34 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	ft_env(int argc, char **argv, char **env)
 {
+	(void) argc;
+	(void) argv;
 	if (!env)
 		return (0);
 	while(*env)
@@ -45,6 +47,9 @@ int	ft_pwd(int argc, char **argv, char **env)
 {
 	char	*path; 
 
+	(void) argc;
+	(void) argv;
+	(void) env;
 	path = getcwd(NULL, 0);
 	if (!path)
 		return (1);
@@ -55,8 +60,8 @@ int	ft_pwd(int argc, char **argv, char **env)
 
 int	ft_cd(int argc, char **argv, char **env)
 {
-	char	*path; 
-
+	(void) argc;
+	(void) env;
 	if (chdir(argv[1]))
 		printf("cd: %s: %s\n", strerror(errno), argv[1]);
 	return (0);

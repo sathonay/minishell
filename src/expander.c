@@ -24,7 +24,7 @@ static char	*str_concat_consume(char *str1, char *str2, int str_to_consome)
 	}
 	else if (str_to_consome == 1)
 		free_str(&str2);
-	else if (str_concat_consume == 0)
+	else if (str_to_consome == 0)
 		free_str(&str1);
 	return (concat);
 } 
@@ -122,6 +122,7 @@ void	expander(t_shell *shell)
 		if (fid == 0)
 			execve(path, argv, shell->env);
 		waitpid(fid, &wstatus, 0);
+		free(path);
 	}
 	char **argv_o = argv;
 	printf("argv list:\n");

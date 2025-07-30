@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/30 06:38:27 by alrey            ###   ########.fr       */
+/*   Updated: 2025/07/30 08:51:07 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,8 @@ void	free_str(char **str);
 void	free_str_array(char **strs);
 
 void	free_token_stack(t_shell *shell);
+
+void	free_shell(t_shell *shell);
 
 /*
 	tokenizer.c

@@ -23,7 +23,7 @@ static void tokenization(t_shell *shell)
 {
 	char	*input;
 	char	*close;
-	
+	(void) close;
 	shell->argc = 0;
 	input = shell->line;
 	while (*input && *input == ' ') 
@@ -75,6 +75,7 @@ static void tokenization(t_shell *shell)
 //___$__$_"__$___$___"__$___'____'
 void lex(t_shell *shell)
 {
+	(void) shell;
 	/*char	*input;
 	char	*close;
 
