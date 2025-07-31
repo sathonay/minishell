@@ -50,6 +50,7 @@ static char	*expand_env_var(t_shell *shell, t_token_stack *token)
 				l++;
 			str = str_concat_consume(str, ft_get_env(shell, token_str, l), 2);
 			token_str += l;
+			continue;
 		}
 		str = str_concat_consume(str, ft_substr(token_str, 0, 1), 2);
 		token_str++;
