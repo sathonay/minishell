@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrey <alrey@student.42.fr>                +#+  +:+       +#+        */
+/*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 14:28:32 by alrey             #+#    #+#             */
-/*   Updated: 2025/04/11 06:39:19 by alrey            ###   ########.fr       */
+/*   Updated: 2025/07/30 05:37:48 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,14 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+
+// Libft+ start
+
+char	*ft_strconcat(char *s1, char const *s2);
+
+int		ft_strcmp(const char *s1, const char *s2);
+
+// Libft+ end
 
 int		ft_isalpha(int c);
 
@@ -72,8 +80,6 @@ void	*ft_calloc(size_t count, size_t size);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 
 char	*ft_strjoin(char const *s1, char const *s2);
-
-char	*ft_strconcat(char *s1, char const *s2);
 
 char	*ft_strtrim(char const *s1, char const *set);
 

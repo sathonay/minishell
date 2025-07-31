@@ -36,6 +36,7 @@ SRC=	ft_isalpha.c \
 	ft_putnbr_fd.c \
 	\
 	ft_strconcat.c \
+	ft_strcmp.c \
 
 OBJ = $(SRC:.c=.o)
 
