@@ -62,7 +62,8 @@ static void	**ft_list_to_array(t_list *list)
 {
 	void	**array;
 	size_t	i;
-
+	if (!list)
+		return (NULL);
 	array = ft_calloc(ft_lstsize(list) + 1, sizeof(void *));
 	if (!array)
 		return (NULL);
@@ -74,33 +75,59 @@ static void	**ft_list_to_array(t_list *list)
 	}
 	return (array);
 }
-void	expander(t_shell *shell)
+/*void	expander(t_shell *shell)
 {
 	t_token_stack	*token;
 	t_list			*argv_list;
-	t_list			*str;
-
+	char			*str;
+	(void) ft_list_to_array(NULL);
 	token = shell->tokens;
 	argv_list = NULL;
 	while (token)
 	{
-		token = get_first_token(token, STR | QSTR | DQSTR);
+		token = get_first_token(token, STR | QSTR | DQSTR | PIPE);
 		if (!token)
 			break ;
-		str = ft_lstnew(expand_env_var(shell, token));
+		str = expand_env_var(shell, token);
 		while (token->next && (token->next->type & (STR | QSTR | DQSTR)) > 0)
 		{
-			str->content = ft_strjoin((char *)  str->content, expand_env_var(shell, token->next));
+			str = ft_strjoin((char *)  str, expand_env_var(shell, token->next));
 			token = token->next;
 		}
-		ft_lstadd_back(&argv_list, str);
+		ft_lstadd_back(&argv_list, ft_lstnew(expand_env_var(shell, token)));
 		token = token->next;
 	}
-	char **argv = (char **) ft_list_to_array(argv_list);
+}*/
+
+t_token_stack	*expande(t_shell *shell, t_token_stack *token, t_command *command)
+{
+	char			*str;
+
+	str = NULL;
+	(void) ft_list_to_array(NULL);
+	if (token && (token->type & (STR | QSTR | DQSTR)))
+	{
+		str = expand_env_var(shell, token);
+		while (token->next && (token->next->type & (STR | QSTR | DQSTR)))
+		{
+			if (!str)
+				return (NULL); 
+			str = ft_strjoin((char *)  str, expand_env_var(shell, token->next));
+			token = token->next;
+		}
+		ft_lstadd_back(&command->argv_builder, ft_lstnew(str));
+		printf("argv add %s\n", str);
+		return (token);
+	}
+	return (NULL);
+}
+
+
+/*
+char **argv = (char **) ft_list_to_array(argv_list);
 	int size = ft_lstsize(argv_list);
 	ft_lstclear(&argv_list, NULL);
 	char *path = find_exec(*argv, shell->env);
-	//printf("found exec: %s\n", path);
 
 	if (!ft_strcmp(*argv, "pwd"))
 		ft_pwd(size, argv, shell->env);
@@ -134,5 +161,5 @@ void	expander(t_shell *shell)
 		argv++;
 	}
 	free(argv_o);
-}
+*/
 
