@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/30 08:53:45 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/02 00:12:08 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,12 @@ void print_token_stack(t_shell *shell)
 	while (token)
 	{
 		printf("pointer %p\n", token);
-		printf("size %ld\n", token->end - token->start);
 		printf("type %s\n", get_token_str_type(token->type));
-		printf("next %p\n", token->next);
+		printf("size %ld\n", token->end - token->start);
+		printf("content: ");
 		write(1, token->start, token->end - token->start);
 		write(1, "\n", 1);
+		printf("next %p\n\n", token->next);
 		token = token->next;
 	}
 }
@@ -103,10 +104,14 @@ static void	run_loop(t_shell *shell)
 		{
 			printf("tokeninzation failed");
 		}
+		print_token_stack(shell);
+
+		if (!lexer(shell->tokens)) {
+			printf("lexer exeception");
+		}
 		shell->line = NULL;
-		//expand(shell);
+		commander(shell);
 		//printf("line : |%s|\n", shell->line);
-		//print_token_stack(shell);
 		/*t_token_stack *token;
 
 		token = shell->tokens;
@@ -117,13 +122,13 @@ static void	run_loop(t_shell *shell)
 		}*/
 
 		//printf("------------------\n");
-		expander(shell);
+		//expander(shell);
 		//printf("------------------\n");
 		
-		if (get_first_token(shell->tokens, DQSTR))
+		/*if (get_first_token(shell->tokens, DQSTR))
 		{
 			printf("found dqstr\n");
-		}
+		}*/
 		
 		if (ft_strncmp(shell->input, "exit", 5) == 0)
 			shell->running = 0;

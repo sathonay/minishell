@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/30 08:51:07 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/02 00:17:00 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ enum	e_token_type
 	O_FILE_APPEND	= 0b1000000000,
 };
 
+
+
 typedef enum e_token_type t_token_type;
 
 typedef	struct s_token_stack
@@ -71,9 +73,10 @@ typedef struct s_outfile
 
 typedef struct s_command
 {
+	t_list		*argv_builder;
 	t_infile	*infile;
-	int 		argv;
-	char		**argc;
+	int 		argc;
+	char		**argv;
 	t_outfile	*outfile;
 }			t_command;
 
@@ -89,8 +92,11 @@ typedef struct s_shell
 	int				argc;
 	char			**argv;
 	char			**env;
+	t_list			*command_list;
+
 }			t_shell;
 
+bool lexer(t_token_stack *token);
 
 /*
 	Libft+
@@ -148,6 +154,14 @@ int		tokenize(t_shell *shell);
 
 char	*find_exec(char *exec, char **env);
 
-void	expander(t_shell *shell);
+//void	expander(t_shell *shell);
+
+t_token_stack	*expande(t_shell *shell, t_token_stack *token,
+							t_command *command);
+
+
+void	free_command(t_command *command);
+
+bool	commander(t_shell *shell);
 
 #endif
