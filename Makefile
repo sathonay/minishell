@@ -4,7 +4,9 @@ SRC=main.c \
 	environment.c \
 	token.c \
 	tokenizer.c \
+	lexer.c \
 	expander.c \
+	commander.c \
 	free.c \
 	find_exec.c \
 	ft_strldup.c \
