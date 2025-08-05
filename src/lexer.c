@@ -6,13 +6,13 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 01:00:09 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/02 09:07:19 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/03 13:15:47 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-t_token_stack	*lexing(t_token_stack *token)
+static t_token_stack	*lexing(t_token_stack *token)
 {
 	t_token_stack *valid;
 
@@ -22,7 +22,7 @@ t_token_stack	*lexing(t_token_stack *token)
 		if (valid->type == PIPE)
 		{
 			token = get_first_token(valid->next, 0x3fc);
-			if (!token || (token->type & (0x3fc ^ valid->type)) == 0)
+			if (!token || (token->type & (STR | DQSTR | QSTR)) == 0)
 				return (valid);
 			valid = token;
 		}
