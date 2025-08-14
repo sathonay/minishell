@@ -17,11 +17,26 @@ void	free_command(t_command *command)
 	free_str_array(command->argv);
 }
 
-static t_token_stack	*handle_redirections(t_token_stack *token)
+static void pipe_it(t_shell *shell)
 {
+	t_command	*command;
+	int			fd[2];
+	(void) command;
+	return ;
+	if (!pipe(fd))
+		return ;
+	((t_command *) ft_lstlast(shell->command_list)->content)
+		->outfile.fd = fd[0];
+	ft_lstadd_back(&shell->command_list,
+		ft_lstnew(ft_calloc(sizeof(t_command), 1)));
+	((t_command *) ft_lstlast(shell->command_list)->content)
+		->outfile.fd = fd[1];
+}
 
-	if (token )
-
+static t_token_stack	*handle_redirections(t_shell *shell, t_token_stack *token)
+{
+	if (token->type == PIPE)
+		pipe_it(shell);
 	return (token);
 }
 
@@ -37,11 +52,8 @@ bool	commander(t_shell *shell)
 		token = get_first_token(token, STR | QSTR | DQSTR | PIPE);
 		if (!token)
 			break ;
-		if (token->type == PIPE)
-			ft_lstadd_back(&shell->command_list,
-				ft_lstnew(ft_calloc(sizeof(t_command), 1)));
-		if (token->type & (O_FILE | O_FILE | I_FILE | HERE_DOC))
-			// TODO handle redirect
+		if (token->type & (O_FILE | O_FILE | I_FILE | HERE_DOC | PIPE))
+			token = handle_redirections(shell, token);
 		printf("token %p %s\n", token, token->start);
 		if ((token->type & (STR | QSTR | DQSTR)))
 			token = expande(shell, token, (t_command *)

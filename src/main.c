@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/02 00:12:08 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/10 12:18:27 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,14 +91,39 @@ char	*prompt(t_shell *shell)
 	return (free_str(&user), free_str(&home), free_str(&path), prompt);
 }
 
+
+
+int g_signum = 0;
+
+void    signal_handler(int signum)
+{
+    g_signum = signum;
+	printf("handler signal: %d\n", g_signum);
+	if (g_signum == 2)
+		close(STDIN_FILENO);
+    return ;
+}
+
 static void	run_loop(t_shell *shell)
 {
+	int            stdin_dup;
+	signal(SIGINT, signal_handler);
 	while (shell->running)
 	{
+		g_signum = 0;
 		shell->tokens = NULL;
+		stdin_dup = dup(STDIN_FILENO);
 		shell->input = readline(prompt(shell));
-		if (!shell->input)
+		dup2(stdin_dup, STDIN_FILENO);
+        close(stdin_dup);
+		printf("signal: %d\n", g_signum);
+		if (!shell->input && !g_signum)
+		{
+			free(shell->prompt);
 			break;
+		}
+		if (!shell->input && g_signum == 2)
+			continue;
 		//if (syntax_valid(shell->input))
 		if (!tokenize(shell))
 		{
