@@ -61,23 +61,25 @@ typedef struct s_here_doc
 
 typedef struct s_infile
 {
-	int		fd[2];
+	t_token_type type;
+	int		fd;
 	char	*path;
 }			t_infile;
 
 typedef struct s_outfile
 {
-	int		fd[2];
+	t_token_type type;
+	int		fd;
 	char	*path;
 }			t_outfile;
 
 typedef struct s_command
 {
 	t_list		*argv_builder;
-	t_infile	*infile;
+	t_infile	infile;
 	int 		argc;
 	char		**argv;
-	t_outfile	*outfile;
+	t_outfile	outfile;
 }			t_command;
 
 typedef struct s_shell
