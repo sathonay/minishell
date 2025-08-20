@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/10 12:18:27 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/20 18:26:12 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,8 @@ static void	run_loop(t_shell *shell)
 	}
 	rl_clear_history();
 }
+
+
 
 int main(int argc, char **argv, char **env)
 {

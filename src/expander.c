@@ -99,29 +99,30 @@ static void	**ft_list_to_array(t_list *list)
 	}
 }*/
 
-t_token_stack	*expande(t_shell *shell, t_token_stack *token, t_command *command)
+t_expander_result expande(t_shell *shell, t_token_stack *token)
 {
-	char			*str;
 
-	str = NULL;
+	
+	t_expander_result res;
+
+	res.str = NULL;
+	res.end = token;
 	(void) ft_list_to_array(NULL);
-	if (token && (token->type & (STR | QSTR | DQSTR)))
+	if (res.end && (res.end->type & (STR | QSTR | DQSTR)))
 	{
-		str = expand_env_var(shell, token);
-		while (token->next && (token->next->type & (STR | QSTR | DQSTR)))
+		res.str = expand_env_var(shell, res.end);
+		while (res.end->next && (res.end->next->type & (STR | QSTR | DQSTR)))
 		{
-			if (!str)
-				return (NULL); 
-			str = ft_strjoin((char *)  str, expand_env_var(shell, token->next));
-			if ((token->next->type & (STR | QSTR | DQSTR)) == 0)
+			if (!res.str)
+				return (res); 
+			res.str = ft_strjoin(res.str, expand_env_var(shell, res.end->next));
+			if ((res.end->next->type & (STR | QSTR | DQSTR)) == 0)
 				break;
-			token = token->next;
+			res.end = res.end->next;
 		}
-		ft_lstadd_back(&command->argv_builder, ft_lstnew(str));
-		printf("argv add %s\n", str);
-		return (token);
+		return (res);
 	}
-	return (NULL);
+	return (res);
 }
 
 
