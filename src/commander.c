@@ -21,23 +21,40 @@ static void pipe_it(t_shell *shell)
 {
 	t_command	*command;
 	int			fd[2];
-	(void) command;
-	return ;
-	if (!pipe(fd))
+	command = (t_command *) ft_lstlast(shell->command_list)->content;
+		
+	if (command->outfile.type > 0)
+	{
+		printf("already outing");
+		ft_lstadd_back(&shell->command_list,
+			ft_lstnew(ft_calloc(sizeof(t_command), 1)));
+		return;
+	}
+	printf("pipe_it\n");
+	if (pipe(fd))
 		return ;
-	((t_command *) ft_lstlast(shell->command_list)->content)
-		->outfile.fd = fd[0];
+	command->outfile.fd = fd[1];
 	ft_lstadd_back(&shell->command_list,
 		ft_lstnew(ft_calloc(sizeof(t_command), 1)));
-	((t_command *) ft_lstlast(shell->command_list)->content)
-		->outfile.fd = fd[1];
+	command = (t_command *) ft_lstlast(shell->command_list)->content;
+	command->infile.fd = fd[0];
 }
 
 static t_token_stack	*handle_redirections(t_shell *shell, t_token_stack *token)
 {
+	t_command	*command;
+	printf("handle redirect\n");
 	if (token->type == PIPE)
 		pipe_it(shell);
-	return (token);
+	else
+	{
+		command = (t_command *) ft_lstlast(shell->command_list)->content;
+		if (token->type & (I_FILE | HERE_DOC))
+			command->infile.type = token->type;
+		if (token->type & (O_FILE | O_FILE_APPEND))
+			command->outfile.type = token->type;
+	}
+	return (token->next);
 }
 
 bool	commander(t_shell *shell)
@@ -49,12 +66,12 @@ bool	commander(t_shell *shell)
 	token = shell->tokens;
 	while (token)
 	{
-		token = get_first_token(token, STR | QSTR | DQSTR | PIPE);
+		token = get_first_token(token, 0x3fc);
 		if (!token)
 			break ;
-		if (token->type & (O_FILE | O_FILE | I_FILE | HERE_DOC | PIPE))
+		if (token->type & (O_FILE | O_FILE_APPEND | I_FILE | HERE_DOC | PIPE))
 			token = handle_redirections(shell, token);
-		printf("token %p %s\n", token, token->start);
+		printf("token %p %s\n", token, get_token_str_type(token->type));
 		if ((token->type & (STR | QSTR | DQSTR)))
 			token = expande(shell, token, (t_command *)
 					ft_lstlast(shell->command_list)->content);
@@ -69,6 +86,7 @@ bool	commander(t_shell *shell)
 			argvs = argvs->next;
 		}
 		commands = commands->next;
+		printf("------\n");
 	}
 	ft_lstclear(&shell->command_list, (void (*)(void *))free_command);
 	return (1);

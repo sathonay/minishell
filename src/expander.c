@@ -113,6 +113,8 @@ t_token_stack	*expande(t_shell *shell, t_token_stack *token, t_command *command)
 			if (!str)
 				return (NULL); 
 			str = ft_strjoin((char *)  str, expand_env_var(shell, token->next));
+			if ((token->next->type & (STR | QSTR | DQSTR)) == 0)
+				break;
 			token = token->next;
 		}
 		ft_lstadd_back(&command->argv_builder, ft_lstnew(str));
