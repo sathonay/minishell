@@ -120,6 +120,8 @@ bool	commander(t_shell *shell)
 
 	ft_lstadd_back(&shell->command_list,
 		ft_lstnew(ft_calloc(sizeof(t_command), 1)));
+	printf("salut\n");
+	printf("size = %d\n", ft_lstsize(shell->command_list));
 	token = shell->tokens;
 	while (token)
 	{
@@ -132,8 +134,11 @@ bool	commander(t_shell *shell)
 		if ((token->type & (STR | QSTR | DQSTR)))
 		{
 			expand_res = expande(shell, token);
-			ft_lstadd_back(&((t_command *) ft_lstlast(shell->command_list))
-				->argv_builder, ft_lstnew(expand_res.str));
+			printf("chatlut\n");
+			t_list * commands = shell->command_list;
+			t_list * last_command = ft_lstlast(commands);
+			t_command * command = (t_command *) last_command->content;
+			ft_lstadd_back(&command->argv_builder, ft_lstnew(expand_res.str));
 			token = expand_res.end;
 		}
 		token = token->next;

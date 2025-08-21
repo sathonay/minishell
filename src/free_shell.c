@@ -1,0 +1,48 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_shell.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/20 00:38:20 by alrey             #+#    #+#             */
+/*   Updated: 2025/08/21 16:07:31 by alrey            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "shell.h"
+
+void clear_command(t_command *command)
+{
+	ft_lstclear(&command->argv_builder, free);
+	free_str_array(command->argv);
+	free(command);
+}
+
+void clear_command_stack(t_shell *shell)
+{
+	ft_lstclear(&shell->command_list, (void *) clear_command);
+}
+
+void	free_token_stack(t_shell *shell)
+{
+	t_token_stack *token;
+
+	if (shell->tokens)
+	{
+		while (shell->tokens)
+		{
+			token = shell->tokens;
+			shell->tokens = token->next;
+			free(token);
+		}
+		shell->tokens = NULL;	
+	}
+}
+void	free_shell(t_shell *shell)
+{
+	clear_command_stack(shell);
+	free_str(&shell->input);
+	free_str(&shell->prompt);
+	free_token_stack(shell);
+}

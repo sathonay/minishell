@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:50 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/01 22:26:06 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/21 15:57:05 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,8 @@ int	ft_cd(int argc, char **argv, char **env)
 
 int ft_exit(t_shell *shell)
 {
-	(void)shell;
-	free_str(&shell->input);
-	free_token_stack(shell);
+	printf("exiting");
+	free_shell(shell);
 	rl_clear_history();
 	exit(0);
 	return (0);

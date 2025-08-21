@@ -1,25 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
+/*   free_strs.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/06 18:37:01 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/21 15:52:46 by alrey            ###   ########.fr       */
+/*   Created: 2025/08/21 15:45:27 by alrey             #+#    #+#             */
+/*   Updated: 2025/08/21 15:45:55 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "shell.h"
 
-void	ft_lstclear(t_list **lst, void (*del)(void*))
+void	free_str(char **str)
 {
-	if (!*lst)
-		return ;
-	if ((*lst)->next)
-		ft_lstclear(&((*lst)->next), del);
-	if (del)
-		(*del)((*lst)->content);
-	free(*lst);
-	*lst = NULL;
+	if (*str)
+		free(*str);
+	*str = NULL;
+}
+
+void	free_str_array(char **strs)
+{
+	size_t	i;
+
+	i = 0;
+	while (strs && strs[i])
+		free(strs[i++]);
+	if (strs)
+		free(strs);
 }

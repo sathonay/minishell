@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/20 18:26:12 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/21 15:54:25 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ static void	run_loop(t_shell *shell)
 	signal(SIGINT, signal_handler);
 	while (shell->running)
 	{
+		clear_command_stack(shell);
 		g_signum = 0;
 		shell->tokens = NULL;
 		stdin_dup = dup(STDIN_FILENO);
@@ -156,7 +157,7 @@ static void	run_loop(t_shell *shell)
 		}*/
 		
 		if (ft_strncmp(shell->input, "exit", 5) == 0)
-			shell->running = 0;
+			ft_exit(shell);
 		if (ft_strncmp(shell->input, "env", 4) == 0)
 			ft_env(1, NULL, shell->env);
 		if (ft_strncmp(shell->input, "export", 7) == 0)
@@ -181,10 +182,9 @@ int main(int argc, char **argv, char **env)
 
 	printf("WELCOME TO MiNI@\n\n");
 
+	ft_bzero(&shell, sizeof(t_shell));
 	shell.running = 1;
-	shell.prompt = NULL;
 	shell.env = ft_strsdup(env);
-	shell.input = NULL;
 	run_loop(&shell);
 	free_str(&shell.input);
 	free_str_array(shell.env);
