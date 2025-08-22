@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/22 18:10:53 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/22 18:55:11 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,22 @@ static void **lst_to_array(t_list *lst)
 	return (array);
 }
 
+void wait_commands(t_shell *shell, t_list *command_stack)
+{
+	t_command *command;
+
+	while (command_stack)
+	{
+		command = command_stack->content;
+		waitpid(command->pid, &shell->exit_code, 0);
+		command_stack = command_stack->next;
+	}
+}
+
 void executor(t_shell *shell, t_list *command_stack)
 {
 	t_command *command;
+
 	while (command_stack)
 	{
 		command = command_stack->content;
@@ -75,8 +88,10 @@ void executor(t_shell *shell, t_list *command_stack)
 				dup2(command->outfile.fd, 1);
 			execve(command->executable_path, command->argv, shell->env);
 		}
+		printf("pid: %d\n", command->pid);
 		if (command->outfile.fd != 0)
 				close(command->outfile.fd);
 		command_stack = command_stack->next;
 	}
+	wait_commands(shell, shell->command_list);
 }
