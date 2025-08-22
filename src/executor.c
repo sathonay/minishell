@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/21 15:27:31 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/22 17:41:50 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,39 @@ static void tokens_to_commands(t_shell *shell) {
 	}
 }*/
 
-static t_token_stack	*extract_command(t_token_stack *token)
+static void **lst_to_array(t_list *lst)
 {
-	while (token->type != NONE || token->type != PIPE)
+	size_t index;
+	void	**array;
+
+	index = 0;
+	array = ft_calloc(ft_lstsize(lst) + 1, sizeof(void *));
+	if (!array)
+		return (NULL);
+	while (lst)
 	{
-		
+		array[index] = lst->content;
+		index++;
+		lst = lst->next;
 	}
-	return (token);
+	return (array);
 }
 
-void executor(t_shell *shell)
+void executor(t_shell *shell, t_list *command_stack)
 {
-	
+	t_command *command;
+	while (command_stack)
+	{
+		command = command_stack->content;
+		command->argc = ft_lstsize(command->argv_builder);
+		command->argv = (char **) lst_to_array(command->argv_builder);
+		ft_lstclear(&command->argv_builder, NULL);
+		command->executable_path = find_exec(*command->argv, shell->env);
+		command->pid = fork();
+		if (command->pid == 0)
+		{
+			execve(command->executable_path, command->argv, shell->env);
+		}
+		command_stack = command_stack->next;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/21 15:54:25 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/22 17:25:12 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,7 @@ static void	run_loop(t_shell *shell)
 		}
 		shell->line = NULL;
 		commander(shell);
+		executor(shell, shell->command_list);
 		//printf("line : |%s|\n", shell->line);
 		/*t_token_stack *token;
 
