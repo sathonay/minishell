@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/22 18:57:31 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/22 19:24:12 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,30 @@ void wait_commands(t_shell *shell, t_list *command_stack)
 
 	while (command_stack)
 	{
-		command = command_stack->content;
-		waitpid(command->pid, &shell->exit_code, 0);
+		if (command->pid)
+		{
+			command = command_stack->content;
+			waitpid(command->pid, &shell->exit_code, 0);
+		}
 		command_stack = command_stack->next;
 	}
+}
+
+static void execution(t_shell *shell, t_command *command)
+{
+	command->pid = fork();
+	if (command->pid == 0)
+	{
+		if (command->infile.fd != 0)
+			dup2(command->infile.fd, 0);
+		if (command->outfile.fd != 0)
+			dup2(command->outfile.fd, 1);
+		execve(command->executable_path, command->argv, shell->env);
+	}
+	if (command->infile.fd != 0)
+		close(command->infile.fd);
+	if (command->outfile.fd != 0)
+		close(command->outfile.fd);
 }
 
 void executor(t_shell *shell, t_list *command_stack)
@@ -80,19 +100,10 @@ void executor(t_shell *shell, t_list *command_stack)
 		command->argv = (char **) lst_to_array(command->argv_builder);
 		ft_lstclear(&command->argv_builder, NULL);
 		command->executable_path = find_exec(*command->argv, shell->env);
-		command->pid = fork();
-		if (command->pid == 0)
-		{
-			if (command->infile.fd != 0)
-				dup2(command->infile.fd, 0);
-			if (command->outfile.fd != 0)
-				dup2(command->outfile.fd, 1);
-			execve(command->executable_path, command->argv, shell->env);
-		}
-		if (command->infile.fd != 0)
-			close(command->infile.fd);
-		if (command->outfile.fd != 0)
-			close(command->outfile.fd);
+		if (command->executable_path)
+			execution(shell, command);
+		else
+			printf("command not found: %s", *command->argv);
 		command_stack = command_stack->next;
 	}
 	wait_commands(shell, shell->command_list);

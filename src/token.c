@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 17:46:40 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/01 01:32:49 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/22 19:37:01 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,18 @@
 
 void append_token(t_shell *shell, t_token_stack *token)
 {
-	t_token_stack **head = &shell->tokens;
-	while (*head)
-		head = &(*head)->next;
-	*head = token;
+	t_token_stack *head;
+
+	token->next = NULL;
+	head = shell->tokens;
+	if (!head)
+	{
+		shell->tokens = token;
+		return ;
+	}
+	while (head->next)
+		head = head->next;
+	head->next = token;
 }
 
 t_token_stack	*get_first_token(t_token_stack *token, t_token_type type)
