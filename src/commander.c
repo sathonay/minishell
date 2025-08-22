@@ -75,31 +75,31 @@ static char	*ft_ptoa(size_t n)
 }
 // MOVE END
 
-static t_token_stack *infiles_redirect(t_shell *shell, t_token_stack *token)
+static t_token_stack *files_redirect(t_shell *shell, t_token_stack *token)
 {
 	t_command	*command;
 	t_expander_result expand_res;
-	t_redirect *redirect;
-	token = get_first_token(token, (STR | QSTR | DQSTR));
-	expand_res = expande(shell, token);
+	t_redirect *redir;
+
+	expand_res = expande(shell, get_first_token(token, (STR | QSTR | DQSTR)));
 	command = (t_command *) ft_lstlast(shell->command_list)->content;
 	if (token->type & (I_FILE | HERE_DOC))
-		redirect = &command->infile;
+		redir = &command->infile;
 	if (token->type & (O_FILE | O_FILE_APPEND))
-		redirect = &command->outfile;
-	if ((redirect->type & (I_FILE | O_FILE | O_FILE_APPEND)) > 0)
-		redirect->path = expand_res.str;
-	else if (redirect->type == HERE_DOC)
-		redirect->path = ft_ptoa((unsigned long) redirect);
+		redir = &command->outfile;
+	redir->type = token->type;
+	if ((redir->type & (I_FILE | O_FILE | O_FILE_APPEND)) > 0)
+		redir->path = expand_res.str;
+	else if (redir->type == HERE_DOC)
+		redir->path = ft_ptoa((unsigned long) redir);
 	if (token->type == HERE_DOC)
-		redirect->fd = open(redirect->path, O_CREAT | O_WRONLY | O_TRUNC, 0777);
+		redir->fd = open(redir->path, O_CREAT | O_WRONLY | O_TRUNC, 0777);
 	if (token->type == I_FILE)
-		redirect->fd = open(redirect->path, O_RDONLY, 0777);
+		redir->fd = open(redir->path, O_RDONLY, 0777);
 	if (token->type == O_FILE)
-		redirect->fd = open(redirect->path, O_CREAT | O_WRONLY | O_TRUNC, 0777);
+		redir->fd = open(redir->path, O_CREAT | O_WRONLY | O_TRUNC, 0777);
 	if (token->type == O_FILE_APPEND)
-		redirect->fd = open(redirect->path, O_CREAT | O_WRONLY | O_APPEND, 0777);
-	redirect->type = token->type;
+		redir->fd = open(redir->path, O_CREAT | O_WRONLY | O_APPEND, 0777);
 	return (expand_res.end);
 }
 
@@ -109,7 +109,7 @@ static t_token_stack	*handle_redirections(t_shell *shell, t_token_stack *token)
 	if (token->type == PIPE)
 		pipe_it(shell);
 	else
-		return (infiles_redirect(shell, token));
+		return (files_redirect(shell, token));
 	return (token->next);
 }
 
@@ -128,8 +128,6 @@ bool	commander(t_shell *shell)
 		token = get_first_token(token, 0x3fc);
 		if (!token)
 			break ;
-		if (token->type & (O_FILE | O_FILE_APPEND | I_FILE | HERE_DOC | PIPE))
-			token = handle_redirections(shell, token);
 		printf("token %p %s\n", token, get_token_str_type(token->type));
 		if ((token->type & (STR | QSTR | DQSTR)))
 		{
@@ -141,6 +139,8 @@ bool	commander(t_shell *shell)
 			ft_lstadd_back(&command->argv_builder, ft_lstnew(expand_res.str));
 			token = expand_res.end;
 		}
+		if (token->type & (O_FILE | O_FILE_APPEND | I_FILE | HERE_DOC | PIPE))
+			token = handle_redirections(shell, token);
 		token = token->next;
 	}
 	return (1);
