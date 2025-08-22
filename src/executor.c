@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/22 18:55:11 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/22 18:57:31 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,16 @@ void executor(t_shell *shell, t_list *command_stack)
 		command->pid = fork();
 		if (command->pid == 0)
 		{
-			printf("out file descriptor %d\n", command->outfile.fd);
+			if (command->infile.fd != 0)
+				dup2(command->infile.fd, 0);
 			if (command->outfile.fd != 0)
 				dup2(command->outfile.fd, 1);
 			execve(command->executable_path, command->argv, shell->env);
 		}
-		printf("pid: %d\n", command->pid);
+		if (command->infile.fd != 0)
+			close(command->infile.fd);
 		if (command->outfile.fd != 0)
-				close(command->outfile.fd);
+			close(command->outfile.fd);
 		command_stack = command_stack->next;
 	}
 	wait_commands(shell, shell->command_list);
