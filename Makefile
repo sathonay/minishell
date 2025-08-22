@@ -7,16 +7,18 @@ SRC=main.c \
 	lexer.c \
 	expander.c \
 	commander.c \
-	free.c \
+	executor.c \
 	find_exec.c \
 	ft_strldup.c \
+	free_strs.c \
+	free_shell.c \
 
 OBJ_FOLDER=objects/
 OBJ		= $(addprefix $(OBJ_FOLDER), $(SRC:.c=.o))
 
 
 CC = clang
-FLAGS=-Wall -Wextra -Werror -fsanitize=address
+FLAGS=-Wall -Wextra -Werror #-fsanitize=address
 
 LIBFT_DIR=libft/
 LIBFT_LIB=$(LIBFT_DIR)libft.a

@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/20 17:53:10 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/22 18:47:01 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+# include <string.h>
+# include <errno.h>
 
 typedef	struct s_lexer
 {
@@ -86,16 +88,18 @@ typedef struct s_redirect
 
 typedef struct s_command
 {
+	pid_t		pid;
 	t_list		*argv_builder;
 	t_redirect	infile;
 	int 		argc;
 	char		**argv;
+	char		*executable_path;
 	t_redirect	outfile;
 }			t_command;
 
 typedef struct s_shell
 {
-	unsigned char	exit_code;
+	int	exit_code;
 	t_token_stack	*tokens;
 	t_command	*commands;
 	char			running;
@@ -156,15 +160,6 @@ t_token_stack	*get_first_token(t_token_stack *token, t_token_type type);
 
 char			*get_token_str_type(t_token_type type);
 
-
-void	free_str(char **str);
-
-void	free_str_array(char **strs);
-
-void	free_token_stack(t_shell *shell);
-
-void	free_shell(t_shell *shell);
-
 /*
 	tokenizer.c
 */
@@ -178,9 +173,25 @@ char	*find_exec(char *exec, char **env);
 
 t_expander_result expande(t_shell *shell, t_token_stack *token);
 
-
-void	free_command(t_command *command);
-
 bool	commander(t_shell *shell);
+
+void executor(t_shell *shell, t_list *command_stack);
+
+/*
+	Free related
+*/
+
+void	clear_command(t_command *command);
+
+void	clear_command_stack(t_shell *shell);
+
+void	free_str(char **str);
+
+void	free_str_array(char **strs);
+
+void	free_token_stack(t_shell *shell);
+
+void	free_shell(t_shell *shell);
+
 
 #endif
