@@ -11,12 +11,6 @@
 /* ************************************************************************** */
 #include "shell.h"
 
-void	free_command(t_command *command)
-{
-	ft_lstclear(&command->argv_builder, free);
-	free_str_array(command->argv);
-}
-
 static void pipe_it(t_shell *shell)
 {
 	t_command	*command;
@@ -75,13 +69,27 @@ static char	*ft_ptoa(size_t n)
 }
 // MOVE END
 
-static t_token_stack *files_redirect(t_shell *shell, t_token_stack *token)
+static int	redirect_to_file_flags(t_token_type type)
+{
+	if (type == HERE_DOC)
+		return (O_CREAT | O_RDWR| O_TRUNC);
+	if (type == I_FILE)
+		return (O_RDONLY);
+	if (type == O_FILE)
+		return (O_CREAT | O_WRONLY | O_TRUNC);
+	if (type == O_FILE_APPEND)
+		return (O_CREAT | O_WRONLY | O_APPEND);
+	return (0);
+}
+
+static t_token_stack	*files_redirect(t_shell *shell, t_token_stack *token)
 {
 	t_command	*command;
 	t_expander_result expand_res;
 	t_redirect *redir;
 
 	expand_res = expande(shell, get_first_token(token, (STR | QSTR | DQSTR)));
+	// TODO check if failed
 	command = (t_command *) ft_lstlast(shell->command_list)->content;
 	if (token->type & (I_FILE | HERE_DOC))
 		redir = &command->infile;
@@ -91,15 +99,11 @@ static t_token_stack *files_redirect(t_shell *shell, t_token_stack *token)
 	if ((redir->type & (I_FILE | O_FILE | O_FILE_APPEND)) > 0)
 		redir->path = expand_res.str;
 	else if (redir->type == HERE_DOC)
+	{
 		redir->path = ft_ptoa((unsigned long) redir);
-	if (token->type == HERE_DOC)
-		redir->fd = open(redir->path, O_CREAT | O_WRONLY | O_TRUNC, 0777);
-	if (token->type == I_FILE)
-		redir->fd = open(redir->path, O_RDONLY, 0777);
-	if (token->type == O_FILE)
-		redir->fd = open(redir->path, O_CREAT | O_WRONLY | O_TRUNC, 0777);
-	if (token->type == O_FILE_APPEND)
-		redir->fd = open(redir->path, O_CREAT | O_WRONLY | O_APPEND, 0777);
+		redir->eof = expand_res.str;
+	}
+	redir->fd = open(redir->path, redirect_to_file_flags(redir->type), 0777);
 	return (expand_res.end);
 }
 

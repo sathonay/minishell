@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/22 19:24:12 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/23 04:02:35 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,34 @@ void wait_commands(t_shell *shell, t_list *command_stack)
 	}
 }
 
+static void here_is_the_doc(t_list *command_stack)
+{
+	t_command	*command;
+	t_redirect	*infile;
+	char		*line;
+
+	while (command_stack)
+	{
+		command = command_stack->content;
+		infile = &command->infile,
+		line = NULL;
+		if (infile->type == HERE_DOC)
+		{
+			line = readline("");
+			while (line) {
+				if (line && ft_strncmp(line, infile->eof, ft_strlen(infile->eof)) == 0)
+					break ;
+				write(infile->fd, line, ft_strlen(line));
+				write(infile->fd, "\n", 1);
+				(free_str(&line), line = readline(""));
+			}
+			(free_str(&line), close(infile->fd));
+			infile->fd = open(infile->path, O_CREAT | O_RDONLY, 0777);
+		}
+		command_stack = command_stack->next;
+	}
+}
+
 static void execution(t_shell *shell, t_command *command)
 {
 	command->pid = fork();
@@ -91,8 +119,9 @@ static void execution(t_shell *shell, t_command *command)
 
 void executor(t_shell *shell, t_list *command_stack)
 {
-	t_command *command;
+	t_command	*command;
 
+	here_is_the_doc(command_stack);
 	while (command_stack)
 	{
 		command = command_stack->content;
