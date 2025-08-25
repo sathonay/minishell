@@ -6,11 +6,14 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/23 04:04:07 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/24 16:22:37 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
+
+
+int g_signum;
 
 static char **ft_strsdup(char **strs)
 {
@@ -92,9 +95,6 @@ char	*prompt(t_shell *shell)
 }
 
 
-
-int g_signum = 0;
-
 void    signal_handler(int signum)
 {
     g_signum = signum;
@@ -106,25 +106,21 @@ void    signal_handler(int signum)
 
 static void	run_loop(t_shell *shell)
 {
-	int            stdin_dup;
+	//int            stdin_dup;
 	signal(SIGINT, signal_handler);
-	g_signum = 0;
 	while (shell->running)
 	{
+		signals_main();
 		clear_command_stack(shell);
 		shell->tokens = NULL;
-		stdin_dup = dup(STDIN_FILENO);
 		shell->input = readline(prompt(shell));
-		dup2(stdin_dup, STDIN_FILENO);
-        close(stdin_dup);
 		printf("signal: %d\n", g_signum);
-		if (!shell->input && !g_signum)
+		if (!shell->input)
 		{
-			free_str(&shell->prompt);
 			break;
 		}
-		if (!shell->input && g_signum == 2)
-			continue;
+
+		signals_cmd();
 		//if (syntax_valid(shell->input))
 		if (!tokenize(shell))
 		{
@@ -167,7 +163,6 @@ static void	run_loop(t_shell *shell)
 		free_str(&shell->prompt);
 		free_str(&shell->input);
 		free_token_stack(shell);
-		g_signum = 0;
 	}
 	rl_clear_history();
 }

@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/23 04:02:35 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/24 16:21:42 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,22 +57,25 @@ static void **lst_to_array(t_list *lst)
 	return (array);
 }
 
-void wait_commands(t_shell *shell, t_list *command_stack)
+static void	wait_commands(t_shell *shell, t_list *command_stack)
 {
-	t_command *command;
+	t_command	*command;
 
 	while (command_stack)
 	{
+		command = command_stack->content;
 		if (command->pid)
 		{
 			command = command_stack->content;
 			waitpid(command->pid, &shell->exit_code, 0);
 		}
+		if (command->infile.type == HERE_DOC)
+			; // TODO remove heredoc file
 		command_stack = command_stack->next;
 	}
 }
 
-static void here_is_the_doc(t_list *command_stack)
+static void	here_is_the_doc(t_list *command_stack)
 {
 	t_command	*command;
 	t_redirect	*infile;
@@ -87,7 +90,7 @@ static void here_is_the_doc(t_list *command_stack)
 		{
 			line = readline("");
 			while (line) {
-				if (line && ft_strncmp(line, infile->eof, ft_strlen(infile->eof)) == 0)
+				if (!line || ft_strncmp(line, infile->eof, ft_strlen(infile->eof)) == 0)
 					break ;
 				write(infile->fd, line, ft_strlen(line));
 				write(infile->fd, "\n", 1);
@@ -100,7 +103,7 @@ static void here_is_the_doc(t_list *command_stack)
 	}
 }
 
-static void execution(t_shell *shell, t_command *command)
+static void	execution(t_shell *shell, t_command *command)
 {
 	command->pid = fork();
 	if (command->pid == 0)
@@ -117,7 +120,7 @@ static void execution(t_shell *shell, t_command *command)
 		close(command->outfile.fd);
 }
 
-void executor(t_shell *shell, t_list *command_stack)
+void	executor(t_shell *shell, t_list *command_stack)
 {
 	t_command	*command;
 
@@ -132,7 +135,7 @@ void executor(t_shell *shell, t_list *command_stack)
 		if (command->executable_path)
 			execution(shell, command);
 		else
-			printf("command not found: %s", *command->argv);
+			printf("command not found: %s\n", *command->argv);
 		command_stack = command_stack->next;
 	}
 	wait_commands(shell, shell->command_list);

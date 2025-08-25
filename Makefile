@@ -12,13 +12,14 @@ SRC=main.c \
 	ft_strldup.c \
 	free_strs.c \
 	free_shell.c \
+	signal.c \
 
 OBJ_FOLDER=objects/
 OBJ		= $(addprefix $(OBJ_FOLDER), $(SRC:.c=.o))
 
 
 CC = clang
-FLAGS=-Wall -Wextra -Werror #-fsanitize=address
+FLAGS=-Wall -Wextra -Werror -fsanitize=address
 
 LIBFT_DIR=libft/
 LIBFT_LIB=$(LIBFT_DIR)libft.a
