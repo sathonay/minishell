@@ -28,19 +28,19 @@ void clear_command_stack(t_shell *shell)
 	ft_lstclear(&shell->command_list, (void *) clear_command);
 }
 
-void	free_token_stack(t_shell *shell)
+static void	free_token_stack(t_token_stack **tokens)
 {
 	t_token_stack *token;
 
-	if (shell->tokens)
+	if (*tokens)
 	{
-		while (shell->tokens)
+		while (*tokens)
 		{
-			token = shell->tokens;
-			shell->tokens = token->next;
+			token = *tokens;
+			*tokens = token->next;
 			free(token);
 		}
-		shell->tokens = NULL;	
+		*tokens = NULL;	
 	}
 }
 void	free_shell(t_shell *shell)
@@ -48,5 +48,5 @@ void	free_shell(t_shell *shell)
 	clear_command_stack(shell);
 	free_str(&shell->input);
 	free_str(&shell->prompt);
-	free_token_stack(shell);
+	free_token_stack(&shell->tokens);
 }

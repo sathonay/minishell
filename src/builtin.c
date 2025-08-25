@@ -12,10 +12,13 @@
 
 #include "shell.h"
 
-int	ft_env(int argc, char **argv, char **env)
+int	ft_env(t_shell shell, t_command command)
 {
-	(void) argc;
-	(void) argv;
+	printf("builtin env");
+	(void) command;
+	char **env;
+
+	env = shell.env;
 	if (!env)
 		return (0);
 	while(*env)
@@ -43,13 +46,12 @@ int	ft_export(t_shell *shell)
 	return (0);	
 }
 
-int	ft_pwd(int argc, char **argv, char **env)
+int	ft_pwd(t_shell shell, t_command command)
 {
 	char	*path; 
 
-	(void) argc;
-	(void) argv;
-	(void) env;
+	(void) shell;
+	(void) command;
 	path = getcwd(NULL, 0);
 	if (!path)
 		return (1);

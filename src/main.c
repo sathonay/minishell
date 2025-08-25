@@ -106,67 +106,25 @@ void    signal_handler(int signum)
 
 static void	run_loop(t_shell *shell)
 {
-	//int            stdin_dup;
-	signal(SIGINT, signal_handler);
 	while (shell->running)
 	{
 		signals_main();
-		clear_command_stack(shell);
-		shell->tokens = NULL;
 		shell->input = readline(prompt(shell));
 		printf("signal: %d\n", g_signum);
 		if (!shell->input)
-		{
 			break;
-		}
-
 		signals_cmd();
-		//if (syntax_valid(shell->input))
-		if (!tokenize(shell))
-		{
-			printf("tokeninzation failed");
-		}
-		print_token_stack(shell);
-
-		if (!lexer(shell->tokens)) {
-			printf("lexer exeception");
-		}
-		shell->line = NULL;
-		commander(shell);
-		executor(shell, shell->command_list);
-		//printf("line : |%s|\n", shell->line);
-		/*t_token_stack *token;
-
-		token = shell->tokens;
-		while (token)
-		{
-			printf("token type: %s\n", get_token_str_type(token->type));
-			token = token->next;
-		}*/
-
-		//printf("------------------\n");
-		//expander(shell);
-		//printf("------------------\n");
-		
-		/*if (get_first_token(shell->tokens, DQSTR))
-		{
-			printf("found dqstr\n");
-		}*/
-		
+		if (tokenize(shell) && lexer(shell->tokens) && commander(shell))
+			executor(shell, shell->command_list);
 		if (ft_strncmp(shell->input, "exit", 5) == 0)
 			ft_exit(shell);
-		if (ft_strncmp(shell->input, "env", 4) == 0)
-			ft_env(1, NULL, shell->env);
 		if (ft_strncmp(shell->input, "export", 7) == 0)
 			ft_export(shell);
 		add_history(shell->input);
-		free_str(&shell->prompt);
-		free_str(&shell->input);
-		free_token_stack(shell);
+		free_shell(shell);
 	}
-	rl_clear_history();
-}
 
+}
 
 
 int main(int argc, char **argv, char **env)
@@ -174,7 +132,7 @@ int main(int argc, char **argv, char **env)
 	(void)argc;
 	(void)argv;
 	if (argc > 1)
-		return(dprintf(2, "Why R u running my shell with args ?😱\n"), 1);
+		return(printf("Why R u running my shell with args ?😱\n"), 1);
 	t_shell shell;
 
 	printf("WELCOME TO MiNI@\n\n");
@@ -183,7 +141,6 @@ int main(int argc, char **argv, char **env)
 	shell.running = 1;
 	shell.env = ft_strsdup(env);
 	run_loop(&shell);
-	free_str(&shell.input);
-	free_str_array(shell.env);
 	rl_clear_history();
+	free_shell(&shell);
 }

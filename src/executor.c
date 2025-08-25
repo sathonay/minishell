@@ -65,10 +65,7 @@ static void	wait_commands(t_shell *shell, t_list *command_stack)
 	{
 		command = command_stack->content;
 		if (command->pid)
-		{
-			command = command_stack->content;
 			waitpid(command->pid, &shell->exit_code, 0);
-		}
 		if (command->infile.type == HERE_DOC)
 			; // TODO remove heredoc file
 		command_stack = command_stack->next;
@@ -103,22 +100,46 @@ static void	here_is_the_doc(t_list *command_stack)
 	}
 }
 
+static void *builtins(t_shell *shell, t_command *command)
+{
+	(void) shell;
+	printf("first arg %s\n", command->argv[0]);
+	if (ft_strcmp(command->argv[0], "env") == 0)
+		return (ft_env);
+	if (ft_strcmp(command->argv[0], "pwd") == 0)
+		return (ft_pwd);
+	return (NULL);
+}
+
 static void	execution(t_shell *shell, t_command *command)
 {
+	int	(*builtin)(t_shell, t_command);
+
+	builtin = builtins(shell, command);
+	command->executable_path = find_exec(*command->argv, shell->env);
 	command->pid = fork();
-	if (command->pid == 0)
+	printf("pid %d\n", command->pid);
+	if (command->pid != 0)
+		return ;
+	if (!builtin && !command->executable_path)
 	{
-		if (command->infile.fd != 0)
-			dup2(command->infile.fd, 0);
-		if (command->outfile.fd != 0)
-			dup2(command->outfile.fd, 1);
-		execve(command->executable_path, command->argv, shell->env);
+		printf("command not found: %s\n", *command->argv);
+		exit(127);
 	}
+	if (command->infile.fd != 0)
+		dup2(command->infile.fd, 0);
+	if (command->outfile.fd != 0)
+		dup2(command->outfile.fd, 1);
 	if (command->infile.fd != 0)
 		close(command->infile.fd);
 	if (command->outfile.fd != 0)
 		close(command->outfile.fd);
+	if (!builtin)
+		execve(command->executable_path, command->argv, shell->env);
+	else
+		exit(builtin(*shell, *command));
 }
+
 
 void	executor(t_shell *shell, t_list *command_stack)
 {
@@ -128,14 +149,16 @@ void	executor(t_shell *shell, t_list *command_stack)
 	while (command_stack)
 	{
 		command = command_stack->content;
+		printf("cmd %p\n", command);
 		command->argc = ft_lstsize(command->argv_builder);
 		command->argv = (char **) lst_to_array(command->argv_builder);
 		ft_lstclear(&command->argv_builder, NULL);
-		command->executable_path = find_exec(*command->argv, shell->env);
-		if (command->executable_path)
-			execution(shell, command);
-		else
-			printf("command not found: %s\n", *command->argv);
+		printf("c'est pas la\n");
+		execution(shell, command);
+		if (command->infile.fd != 0)
+			close(command->infile.fd);
+		if (command->outfile.fd != 0)
+			close(command->outfile.fd);
 		command_stack = command_stack->next;
 	}
 	wait_commands(shell, shell->command_list);
