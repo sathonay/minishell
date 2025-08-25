@@ -91,6 +91,8 @@ static t_token_stack	*files_redirect(t_shell *shell, t_token_stack *token)
 	expand_res = expande(shell, get_first_token(token, (STR | QSTR | DQSTR)));
 	// TODO check if failed
 	command = (t_command *) ft_lstlast(shell->command_list)->content;
+	if (command->infile.fd != 0)
+		close(command->infile.fd);
 	if (token->type & (I_FILE | HERE_DOC))
 		redir = &command->infile;
 	if (token->type & (O_FILE | O_FILE_APPEND))
