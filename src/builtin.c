@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:50 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/21 15:57:05 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 05:02:30 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,11 @@ int	ft_pwd(t_shell shell, t_command command)
 	return (0);
 }
 
-int	ft_cd(int argc, char **argv, char **env)
+int	ft_cd(t_shell shell, t_command command)
 {
-	(void) argc;
-	(void) env;
-	if (chdir(argv[1]))
-		printf("cd: %s: %s\n", strerror(errno), argv[1]);
+	(void) shell;
+	if (chdir(command.argv[1]))
+		printf("cd: %s: %s\n", strerror(errno), command.argv[1]);
 	return (0);
 }
 

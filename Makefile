@@ -13,6 +13,7 @@ SRC=main.c \
 	free_strs.c \
 	free_shell.c \
 	signal.c \
+	file_descriptor.c \
 
 OBJ_FOLDER=objects/
 OBJ		= $(addprefix $(OBJ_FOLDER), $(SRC:.c=.o))

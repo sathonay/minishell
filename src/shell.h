@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 02:28:04 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 05:47:10 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int					ft_env(t_shell shell, t_command command);
 
 int					ft_export(t_shell *shell);
 
-int					ft_cd(int argc, char **argv, char **env);
+int					ft_cd(t_shell shell, t_command command);
 
 int					ft_pwd(t_shell shell, t_command command);
 
@@ -171,5 +171,9 @@ void				free_shell(t_shell *shell);
 void				signals_main(void);
 
 void				signals_cmd(void);
+
+void				dup_in_and_out(int fd[2]);
+
+int					dup2_close_old(int old, int new);
 
 #endif

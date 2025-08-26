@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 03:13:20 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 05:47:47 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ static void	*builtins(t_shell *shell, t_command *command)
 		return (ft_env);
 	if (ft_strcmp(command->argv[0], "pwd") == 0)
 		return (ft_pwd);
+	if (ft_strcmp(command->argv[0], "cd") == 0)
+		return (ft_cd);
 	return (NULL);
 }
 
@@ -88,7 +90,8 @@ static void	execution(t_shell *shell, t_command *command)
 
 	builtin = builtins(shell, command);
 	command->executable_path = find_exec(*command->argv, shell->env);
-	command->pid = fork();
+	if (!builtin)
+		command->pid = fork();
 	if (command->pid != 0)
 		return ;
 	if (!builtin && !command->executable_path)
@@ -100,24 +103,26 @@ static void	execution(t_shell *shell, t_command *command)
 		dup2(command->infile.fd, 0);
 	if (command->outfile.fd != 0)
 		dup2(command->outfile.fd, 1);
-	if (command->infile.fd != 0)
+	if (!builtin && command->infile.fd != 0)
 		close(command->infile.fd);
-	if (command->outfile.fd != 0)
+	if (!builtin && command->outfile.fd != 0)
 		close(command->outfile.fd);
 	if (!builtin)
 		execve(command->executable_path, command->argv, shell->env);
 	else
-		exit(builtin(*shell, *command));
+		builtin(*shell, *command);
 }
 
 void	executor(t_shell *shell, t_list *command_stack)
 {
 	t_command	*command;
+	int			fd[2];
 
 	if (!((t_command *)command_stack->content)->argv_builder)
 		return;
 	while (command_stack)
 	{
+		dup_in_and_out(fd);
 		command = command_stack->content;
 		here_is_the_doc(command);
 		command->argc = ft_lstsize(command->argv_builder);
@@ -128,7 +133,10 @@ void	executor(t_shell *shell, t_list *command_stack)
 			close(command->infile.fd);
 		if (command->outfile.fd != 0)
 			close(command->outfile.fd);
+		dup2_close_old(fd[0], 0);
+		dup2_close_old(fd[1], 1);
 		command_stack = command_stack->next;
 	}
 	wait_commands(shell, shell->command_list);
+
 }
