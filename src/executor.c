@@ -6,42 +6,16 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/24 16:21:42 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 02:54:39 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-/*static int get_command_count(t_token_stack *token) {
-	int count;
-	
-	count = 1;
-	while (token->type != NONE) {
-		if (token->type == PIPE)
-			count++;
-		token = token->next;
-	}
-}
-
-static void tokens_to_commands(t_shell *shell) {
-	t_token_stack *token;
-	int command_count;
-
-	token = shell->tokens;
-	commands
-	while (token)
-	{
-		printf("size %d\n", token->end - token->start);
-		printf("type %d\n", token->type);
-		write(1, token->start, token->end - token->start);
-		write(1, "\n", 1);
-		token = token->next;
-	}
-}*/
-
-static void **lst_to_array(t_list *lst)
+//MOVE TO lst_utils.c
+static void	**lst_to_array(t_list *lst)
 {
-	size_t index;
+	size_t	index;
 	void	**array;
 
 	index = 0;
@@ -72,38 +46,33 @@ static void	wait_commands(t_shell *shell, t_list *command_stack)
 	}
 }
 
-static void	here_is_the_doc(t_list *command_stack)
+static void	here_is_the_doc(t_command *command)
 {
-	t_command	*command;
 	t_redirect	*infile;
 	char		*line;
 
-	while (command_stack)
+	infile = &command->infile;
+	line = NULL;
+	if (infile->type == HERE_DOC)
 	{
-		command = command_stack->content;
-		infile = &command->infile,
-		line = NULL;
-		if (infile->type == HERE_DOC)
+		line = readline("");
+		while (line)
 		{
-			line = readline("");
-			while (line) {
-				if (!line || ft_strncmp(line, infile->eof, ft_strlen(infile->eof)) == 0)
-					break ;
-				write(infile->fd, line, ft_strlen(line));
-				write(infile->fd, "\n", 1);
-				(free_str(&line), line = readline(""));
-			}
-			(free_str(&line), close(infile->fd));
-			infile->fd = open(infile->path, O_CREAT | O_RDONLY, 0777);
+			if (!line
+				|| ft_strncmp(line, infile->eof, ft_strlen(infile->eof)) == 0)
+				break ;
+			write(infile->fd, line, ft_strlen(line));
+			write(infile->fd, "\n", 1);
+			(free_str(&line), line = readline(""));
 		}
-		command_stack = command_stack->next;
+		(free_str(&line), close(infile->fd));
+		infile->fd = open(infile->path, O_CREAT | O_RDONLY, 0777);
 	}
 }
 
-static void *builtins(t_shell *shell, t_command *command)
+static void	*builtins(t_shell *shell, t_command *command)
 {
 	(void) shell;
-	printf("first arg %s\n", command->argv[0]);
 	if (ft_strcmp(command->argv[0], "env") == 0)
 		return (ft_env);
 	if (ft_strcmp(command->argv[0], "pwd") == 0)
@@ -140,20 +109,17 @@ static void	execution(t_shell *shell, t_command *command)
 		exit(builtin(*shell, *command));
 }
 
-
 void	executor(t_shell *shell, t_list *command_stack)
 {
 	t_command	*command;
 
-	here_is_the_doc(command_stack);
 	while (command_stack)
 	{
 		command = command_stack->content;
-		printf("cmd %p\n", command);
+		here_is_the_doc(command);
 		command->argc = ft_lstsize(command->argv_builder);
 		command->argv = (char **) lst_to_array(command->argv_builder);
 		ft_lstclear(&command->argv_builder, NULL);
-		printf("c'est pas la\n");
 		execution(shell, command);
 		if (command->infile.fd != 0)
 			close(command->infile.fd);

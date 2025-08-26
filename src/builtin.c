@@ -14,14 +14,13 @@
 
 int	ft_env(t_shell shell, t_command command)
 {
-	printf("builtin env");
-	(void) command;
-	char **env;
+	char	**env;
 
+	(void) command;
 	env = shell.env;
 	if (!env)
 		return (0);
-	while(*env)
+	while (*env)
 		printf("%s\n", *(env++));
 	return (0);
 }
@@ -43,12 +42,12 @@ int	ft_export(t_shell *shell)
 		dup[size + 1] = ft_strdup(shell->env[size]);
 	free_str_array(shell->env);
 	shell->env = dup;
-	return (0);	
+	return (0);
 }
 
 int	ft_pwd(t_shell shell, t_command command)
 {
-	char	*path; 
+	char	*path;
 
 	(void) shell;
 	(void) command;
@@ -69,7 +68,7 @@ int	ft_cd(int argc, char **argv, char **env)
 	return (0);
 }
 
-int ft_exit(t_shell *shell)
+int	ft_exit(t_shell *shell)
 {
 	printf("exiting");
 	free_shell(shell);

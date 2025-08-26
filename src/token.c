@@ -6,15 +6,15 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 17:46:40 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/23 03:34:37 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 02:29:43 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-void append_token(t_shell *shell, t_token_stack *token)
+void	append_token(t_shell *shell, t_token_stack *token)
 {
-	t_token_stack *head;
+	t_token_stack	*head;
 
 	token->next = NULL;
 	head = shell->tokens;
@@ -34,7 +34,8 @@ t_token_stack	*get_first_token(t_token_stack *token, t_token_type type)
 		token = token->next;
 	return (token);
 }
-char *get_token_str_type(t_token_type type)
+
+char	*get_token_str_type(t_token_type type)
 {
 	if (type == NONE)
 		return ("NONE");

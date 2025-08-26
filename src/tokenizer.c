@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 00:40:46 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/02 09:13:04 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 02:35:46 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ static enum e_token_type	to_token_type(char *input)
 
 static int	get_token_length(enum e_token_type type)
 {
-	
 	if (type == PIPE || type == O_FILE || type == I_FILE
 		|| type == STR || type == QSTR || type == DQSTR || type == EMPTY)
 		return (1);
@@ -66,7 +65,7 @@ static int	extract_token(t_shell *shell, char **head)
 	t_token_stack	*token;
 
 	token = new_token(*head, *head + get_token_length(to_token_type(*head)),
-					to_token_type(*head));
+			to_token_type(*head));
 	if (token == NULL || token->type == NONE)
 		return (0);
 	if (token->type == STR || token->type == EMPTY)
@@ -93,7 +92,7 @@ static int	extract_token(t_shell *shell, char **head)
 int	tokenize(t_shell *shell)
 {
 	char	*input;
-	
+
 	if (!shell->input)
 		return (0);
 	input = shell->input;

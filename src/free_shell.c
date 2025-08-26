@@ -6,13 +6,13 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 00:38:20 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/22 18:23:00 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 02:36:30 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-void clear_command(t_command *command)
+void	clear_command(t_command *command)
 {
 	ft_lstclear(&command->argv_builder, free);
 	free_str_array(command->argv);
@@ -23,14 +23,14 @@ void clear_command(t_command *command)
 	free(command);
 }
 
-void clear_command_stack(t_shell *shell)
+void	clear_command_stack(t_shell *shell)
 {
 	ft_lstclear(&shell->command_list, (void *) clear_command);
 }
 
 static void	free_token_stack(t_token_stack **tokens)
 {
-	t_token_stack *token;
+	t_token_stack	*token;
 
 	if (*tokens)
 	{
@@ -40,9 +40,10 @@ static void	free_token_stack(t_token_stack **tokens)
 			*tokens = token->next;
 			free(token);
 		}
-		*tokens = NULL;	
+		*tokens = NULL;
 	}
 }
+
 void	free_shell(t_shell *shell)
 {
 	clear_command_stack(shell);

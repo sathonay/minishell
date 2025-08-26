@@ -11,12 +11,12 @@
 /* ************************************************************************** */
 #include "shell.h"
 
-static void pipe_it(t_shell *shell)
+static void	pipe_it(t_shell *shell)
 {
 	t_command	*command;
 	int			fd[2];
+
 	command = (t_command *) ft_lstlast(shell->command_list)->content;
-		
 	if (command->outfile.type > 0)
 	{
 		ft_lstadd_back(&shell->command_list,
@@ -32,7 +32,8 @@ static void pipe_it(t_shell *shell)
 	command = (t_command *) ft_lstlast(shell->command_list)->content;
 	command->infile.fd = fd[0];
 }
- // TODO: MOVE START TO UTILS FILES
+// TODO: MOVE START TO UTILS FILES
+
 static size_t	ullen(unsigned long n)
 {
 	size_t	len;
@@ -47,7 +48,6 @@ static size_t	ullen(unsigned long n)
 	}
 	return (len);
 }
-
 
 static char	*ft_ptoa(size_t n)
 {
@@ -72,7 +72,7 @@ static char	*ft_ptoa(size_t n)
 static int	redirect_to_file_flags(t_token_type type)
 {
 	if (type == HERE_DOC)
-		return (O_CREAT | O_RDWR| O_TRUNC);
+		return (O_CREAT | O_RDWR | O_TRUNC);
 	if (type == I_FILE)
 		return (O_RDONLY);
 	if (type == O_FILE)
@@ -84,9 +84,9 @@ static int	redirect_to_file_flags(t_token_type type)
 
 static t_token_stack	*files_redirect(t_shell *shell, t_token_stack *token)
 {
-	t_command	*command;
-	t_expander_result expand_res;
-	t_redirect *redir;
+	t_command			*command;
+	t_expander_result	expand_res;
+	t_redirect			*redir;
 
 	expand_res = expande(shell, get_first_token(token, (STR | QSTR | DQSTR)));
 	// TODO check if failed
@@ -109,9 +109,9 @@ static t_token_stack	*files_redirect(t_shell *shell, t_token_stack *token)
 	return (expand_res.end);
 }
 
-static t_token_stack	*handle_redirections(t_shell *shell, t_token_stack *token)
+static t_token_stack	*handle_redirections(t_shell *shell,
+	t_token_stack *token)
 {
-	printf("handle redirect\n");
 	if (token->type == PIPE)
 		pipe_it(shell);
 	else
@@ -121,27 +121,22 @@ static t_token_stack	*handle_redirections(t_shell *shell, t_token_stack *token)
 
 bool	commander(t_shell *shell)
 {
-	t_token_stack	*token;
-	t_expander_result expand_res;
+	t_command			*command;
+	t_token_stack		*token;
+	t_expander_result	expand_res;
 
 	ft_lstadd_back(&shell->command_list,
 		ft_lstnew(ft_calloc(sizeof(t_command), 1)));
-	printf("salut\n");
-	printf("size = %d\n", ft_lstsize(shell->command_list));
 	token = shell->tokens;
 	while (token)
 	{
 		token = get_first_token(token, 0x3fc);
 		if (!token)
 			break ;
-		printf("token %p %s\n", token, get_token_str_type(token->type));
 		if ((token->type & (STR | QSTR | DQSTR)))
 		{
 			expand_res = expande(shell, token);
-			printf("chatlut\n");
-			t_list * commands = shell->command_list;
-			t_list * last_command = ft_lstlast(commands);
-			t_command * command = (t_command *) last_command->content;
+			command = (t_command *) ft_lstlast(shell->command_list)->content;
 			ft_lstadd_back(&command->argv_builder, ft_lstnew(expand_res.str));
 			token = expand_res.end;
 		}

@@ -1,13 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   environment.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/26 02:28:12 by alrey             #+#    #+#             */
+/*   Updated: 2025/08/26 02:28:56 by alrey            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "shell.h"
 
 char	*ft_get_env(t_shell *shell, char *str, size_t size)
 {
-	char **env;
+	char	**env;
 
 	if (size == 1 && *str == '?')
 		return (ft_strdup("!TODO EXITE CODE!"));
 	env = shell->env;
-	while(*env)	
+	while (*env)
 	{
 		if ((*env)[size] == '=' && ft_strncmp(*env, str, size) == 0)
 			return (ft_strdup((*env) + size + 1));
@@ -28,7 +40,7 @@ bool	environement_format(char *input, size_t size)
 			return (0);
 		input++;
 		size--;
-	}	
+	}
 	return (size == 0);
 }
 

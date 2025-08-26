@@ -27,7 +27,7 @@ static char	*find_env_var(char *var, char **env)
 }
 
 char	*find_exec(char *exec, char **env)
-{ 
+{
 	char	*path;
 	char	**paths;
 	size_t	i;
