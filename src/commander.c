@@ -18,7 +18,10 @@ static void	pipe_it(t_shell *shell)
 
 	command = (t_command *) ft_lstlast(shell->command_list)->content;
 	if (ft_lstsize(command->argv_builder) == 0)
+	{
+
 		return ;
+	}
 	if (command->outfile.type != 0)
 	{
 		ft_lstadd_back(&shell->command_list,
@@ -33,42 +36,6 @@ static void	pipe_it(t_shell *shell)
 	command = (t_command *) ft_lstlast(shell->command_list)->content;
 	command->infile.fd = fd[0];
 }
-// TODO: MOVE START TO UTILS FILES
-
-static size_t	ullen(unsigned long n)
-{
-	size_t	len;
-
-	len = 1;
-	if (n < 0)
-		n = -n;
-	while (n / 10 > 0)
-	{
-		n /= 10;
-		len++;
-	}
-	return (len);
-}
-
-static char	*ft_ptoa(size_t n)
-{
-	size_t	strlen;
-	char	*str;
-
-	strlen = ullen(n);
-	str = malloc(sizeof(char) * (strlen + 1));
-	if (!str)
-		return (NULL);
-	str[strlen] = '\0';
-	while (n / 10 != 0)
-	{
-		str[--strlen] = '0' + (n % 10);
-		n /= 10;
-	}
-	str[--strlen] = '0' + (n % 10);
-	return (str);
-}
-// MOVE END
 
 static int	redirect_to_file_flags(t_token_type type)
 {
@@ -103,7 +70,7 @@ static t_token_stack	*files_redirect(t_shell *shell, t_token_stack *token)
 		redir->path = expand_res.str;
 	else if (redir->type == HERE_DOC)
 	{
-		redir->path = ft_ptoa((unsigned long) redir);
+		redir->path = ft_strdup("/tmp/mini_here_doc");
 		redir->eof = expand_res.str;
 	}
 	redir->fd = open(redir->path, redirect_to_file_flags(redir->type), 0777);

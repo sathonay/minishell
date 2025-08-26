@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 17:45:28 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 18:05:33 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,12 +84,14 @@ static void	*builtins(t_shell *shell, t_command *command)
 		return (ft_pwd);
 	if (ft_strcmp(command->argv[0], "cd") == 0)
 		return (ft_cd);
+	if (ft_strcmp(command->argv[0], "exit") == 0)
+		return (ft_exit);
 	return (NULL);
 }
 
 static void	execution(t_shell *shell, t_command *command)
 {
-	int	(*builtin)(t_shell, t_command);
+	int	(*builtin)(t_shell *, t_command);
 
 	builtin = builtins(shell, command);
 	command->executable_path = find_exec(*command->argv, shell->env);
@@ -113,7 +115,7 @@ static void	execution(t_shell *shell, t_command *command)
 	if (!builtin)
 		execve(command->executable_path, command->argv, shell->env);
 	else if (builtin)
-		builtin(*shell, *command);
+		builtin(shell, *command);
 }
 
 void	executor(t_shell *shell, t_list *command_stack)

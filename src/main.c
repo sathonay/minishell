@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 02:33:58 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 18:11:09 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,10 +107,6 @@ static void	run_loop(t_shell *shell)
 		signals_cmd();
 		if (tokenize(shell) && lexer(shell->tokens) && commander(shell))
 			executor(shell, shell->command_list);
-		if (ft_strncmp(shell->input, "exit", 5) == 0)
-			ft_exit(shell);
-		if (ft_strncmp(shell->input, "export", 7) == 0)
-			ft_export(shell);
 		add_history(shell->input);
 		free_shell(shell);
 	}

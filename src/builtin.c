@@ -6,18 +6,18 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:50 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 05:02:30 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 18:04:38 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-int	ft_env(t_shell shell, t_command command)
+int	ft_env(t_shell *shell, t_command command)
 {
 	char	**env;
 
 	(void) command;
-	env = shell.env;
+	env = shell->env;
 	if (!env)
 		return (0);
 	while (*env)
@@ -45,7 +45,7 @@ int	ft_export(t_shell *shell)
 	return (0);
 }
 
-int	ft_pwd(t_shell shell, t_command command)
+int	ft_pwd(t_shell *shell, t_command command)
 {
 	char	*path;
 
@@ -59,7 +59,7 @@ int	ft_pwd(t_shell shell, t_command command)
 	return (0);
 }
 
-int	ft_cd(t_shell shell, t_command command)
+int	ft_cd(t_shell *shell, t_command command)
 {
 	(void) shell;
 	if (chdir(command.argv[1]))
@@ -67,8 +67,9 @@ int	ft_cd(t_shell shell, t_command command)
 	return (0);
 }
 
-int	ft_exit(t_shell *shell)
+int	ft_exit(t_shell *shell, t_command command)
 {
+	(void) command;
 	printf("exiting");
 	free_shell(shell);
 	rl_clear_history();
