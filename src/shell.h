@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/22 18:47:01 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 02:28:04 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,6 @@
 # include <string.h>
 # include <errno.h>
 
-typedef	struct s_lexer
-{
-
-}			t_lexer;
-
 enum	e_token_type
 {
 	NONE			= 0b0000000000,
@@ -46,11 +41,9 @@ enum	e_token_type
 	O_FILE_APPEND	= 0b1000000000,
 };
 
+typedef enum e_token_type	t_token_type;
 
-
-typedef enum e_token_type t_token_type;
-
-typedef	struct s_token_stack
+typedef struct s_token_stack
 {
 	char					*start;
 	char					*end;
@@ -64,26 +57,12 @@ typedef struct s_here_doc
 	char	*path;
 }			t_here_doc;
 
-typedef struct s_infile
-{
-	t_token_type type;
-	int		fd;
-	char	*path;
-}			t_infile;
-
-typedef struct s_outfile
-{
-	t_token_type type;
-	int		fd;
-	char	*path;
-}			t_outfile;
-
 typedef struct s_redirect
 {
-	t_token_type type;
-	int		fd;
-	char	*path;
-	char	*eof;
+	t_token_type	type;
+	int				fd;
+	char			*path;
+	char			*eof;
 }			t_redirect;
 
 typedef struct s_command
@@ -91,17 +70,17 @@ typedef struct s_command
 	pid_t		pid;
 	t_list		*argv_builder;
 	t_redirect	infile;
-	int 		argc;
+	int			argc;
 	char		**argv;
 	char		*executable_path;
 	t_redirect	outfile;
-}			t_command;
+}				t_command;
 
 typedef struct s_shell
 {
-	int	exit_code;
+	int				exit_code;
 	t_token_stack	*tokens;
-	t_command	*commands;
+	t_command		*commands;
 	char			running;
 	char			*prompt;
 	char			*input;
@@ -113,85 +92,84 @@ typedef struct s_shell
 
 }			t_shell;
 
-typedef struct s_expander_result {
+typedef struct s_expander_result
+{
 	t_token_stack	*end;
 	char			*str;
-} t_expander_result;
+}	t_expander_result;
 
-
-bool lexer(t_token_stack *token);
+bool				lexer(t_token_stack *token);
 
 /*
 	Libft+
 */
 
-
-char	*ft_strldup(const char *s1, size_t len);
+char				*ft_strldup(const char *s1, size_t len);
 
 /*
 Bult in
 */
 
-int		ft_env(int argc, char **argv, char**env);
+int					ft_env(t_shell shell, t_command command);
 
-int		ft_export(t_shell *shell);
+int					ft_export(t_shell *shell);
 
-int		ft_cd(int argc, char **argv, char **env);
+int					ft_cd(int argc, char **argv, char **env);
 
-int		ft_pwd(int argc, char **argv, char **env);
+int					ft_pwd(t_shell shell, t_command command);
 
-int		ft_exit(t_shell *shell);
+int					ft_exit(t_shell *shell);
 
-void	lex(t_shell *shell);
+void				lex(t_shell *shell);
 
-char	*ft_get_env(t_shell *shell, char *str, size_t size);
+char				*ft_get_env(t_shell *shell, char *str, size_t size);
 
-bool	syntax_valid(char *input);
+bool				syntax_valid(char *input);
 
-int		expand(t_shell *shell);
+int					expand(t_shell *shell);
 
 /*
 	token.c
 */
 
-void			append_token(t_shell *shell, t_token_stack *token);
+void				append_token(t_shell *shell, t_token_stack *token);
 
-t_token_stack	*get_first_token(t_token_stack *token, t_token_type type);
+t_token_stack		*get_first_token(t_token_stack *token, t_token_type type);
 
-char			*get_token_str_type(t_token_type type);
+char				*get_token_str_type(t_token_type type);
 
 /*
 	tokenizer.c
 */
 
-int		tokenize(t_shell *shell);
+int					tokenize(t_shell *shell);
 
-char	*find_exec(char *exec, char **env);
+char				*find_exec(char *exec, char **env);
 
 //void	expander(t_shell *shell);
 
+t_expander_result	expande(t_shell *shell, t_token_stack *token);
 
-t_expander_result expande(t_shell *shell, t_token_stack *token);
+bool				commander(t_shell *shell);
 
-bool	commander(t_shell *shell);
-
-void executor(t_shell *shell, t_list *command_stack);
+void				executor(t_shell *shell, t_list *command_stack);
 
 /*
 	Free related
 */
 
-void	clear_command(t_command *command);
+void				clear_command(t_command *command);
 
-void	clear_command_stack(t_shell *shell);
+void				clear_command_stack(t_shell *shell);
 
-void	free_str(char **str);
+void				free_str(char **str);
 
-void	free_str_array(char **strs);
+void				free_str_array(char **strs);
 
-void	free_token_stack(t_shell *shell);
+void				free_shell(t_shell *shell);
 
-void	free_shell(t_shell *shell);
+void				signals_main(void);
 
+void				signals_cmd(void);
 
 #endif

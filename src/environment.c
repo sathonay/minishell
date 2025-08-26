@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 02:28:12 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 02:28:56 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 03:02:34 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*ft_get_env(t_shell *shell, char *str, size_t size)
 	char	**env;
 
 	if (size == 1 && *str == '?')
-		return (ft_strdup("!TODO EXITE CODE!"));
+		return (ft_itoa(shell->exit_code));
 	env = shell->env;
 	while (*env)
 	{

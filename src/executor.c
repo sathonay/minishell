@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 02:54:39 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 03:13:20 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ static void	wait_commands(t_shell *shell, t_list *command_stack)
 		command = command_stack->content;
 		if (command->pid)
 			waitpid(command->pid, &shell->exit_code, 0);
+		if (WIFEXITED(shell->exit_code))
+			shell->exit_code = WEXITSTATUS(shell->exit_code);
 		if (command->infile.type == HERE_DOC)
 			; // TODO remove heredoc file
 		command_stack = command_stack->next;
@@ -87,7 +89,6 @@ static void	execution(t_shell *shell, t_command *command)
 	builtin = builtins(shell, command);
 	command->executable_path = find_exec(*command->argv, shell->env);
 	command->pid = fork();
-	printf("pid %d\n", command->pid);
 	if (command->pid != 0)
 		return ;
 	if (!builtin && !command->executable_path)
@@ -113,6 +114,8 @@ void	executor(t_shell *shell, t_list *command_stack)
 {
 	t_command	*command;
 
+	if (!((t_command *)command_stack->content)->argv_builder)
+		return;
 	while (command_stack)
 	{
 		command = command_stack->content;
