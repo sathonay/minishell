@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 05:47:47 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 17:45:28 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,15 @@ static void	here_is_the_doc(t_command *command)
 		}
 		(free_str(&line), close(infile->fd));
 		infile->fd = open(infile->path, O_CREAT | O_RDONLY, 0777);
+		dprintf(2, "size %d\n", ft_lstsize(command->argv_builder));
 	}
 }
 
 static void	*builtins(t_shell *shell, t_command *command)
 {
 	(void) shell;
+	if (command->argv[0] == NULL)
+		return (NULL); 
 	if (ft_strcmp(command->argv[0], "env") == 0)
 		return (ft_env);
 	if (ft_strcmp(command->argv[0], "pwd") == 0)
@@ -109,7 +112,7 @@ static void	execution(t_shell *shell, t_command *command)
 		close(command->outfile.fd);
 	if (!builtin)
 		execve(command->executable_path, command->argv, shell->env);
-	else
+	else if (builtin)
 		builtin(*shell, *command);
 }
 
@@ -118,8 +121,6 @@ void	executor(t_shell *shell, t_list *command_stack)
 	t_command	*command;
 	int			fd[2];
 
-	if (!((t_command *)command_stack->content)->argv_builder)
-		return;
 	while (command_stack)
 	{
 		dup_in_and_out(fd);

@@ -17,13 +17,14 @@ static void	pipe_it(t_shell *shell)
 	int			fd[2];
 
 	command = (t_command *) ft_lstlast(shell->command_list)->content;
-	if (command->outfile.type > 0)
+	if (ft_lstsize(command->argv_builder) == 0)
+		return ;
+	if (command->outfile.type != 0)
 	{
 		ft_lstadd_back(&shell->command_list,
 			ft_lstnew(ft_calloc(sizeof(t_command), 1)));
 		return;
 	}
-	printf("pipe_it\n");
 	if (pipe(fd))
 		return ;
 	command->outfile.fd = fd[1];

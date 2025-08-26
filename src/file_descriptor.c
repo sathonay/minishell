@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 05:38:00 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 05:47:04 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 17:45:31 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ int dup2_close_old(int old, int new)
     int ret;
 
     ret = dup2(old, new);
-    close(old);
+    if (ret == -1)
+        return (ret);
+    if (old != new)
+        close(old);
     return (ret);
 }

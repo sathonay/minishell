@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 01:00:09 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 03:26:53 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 17:45:21 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ static t_token_stack	*lexing(t_token_stack *token)
 		if (valid && (valid->type & (O_FILE | I_FILE | O_FILE_APPEND | HERE_DOC
 					| PIPE)) > 0)
 		{
-			token = get_first_token(valid->next, 0x3fc ^ valid->type);
-			if (!token || (token->type & (0x3fc ^ valid->type)) == 0)
+			token = get_first_token(valid->next, 0x3fc);
+			if (!token || (token->type & ((STR | DQSTR | QSTR))) == 0)
 				return (valid);
 			valid = token;
 		}
