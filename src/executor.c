@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 18:05:33 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/29 02:18:36 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,11 +95,11 @@ static void	execution(t_shell *shell, t_command *command)
 
 	builtin = builtins(shell, command);
 	command->executable_path = find_exec(*command->argv, shell->env);
-	if (!builtin)
+	if (!builtin && command->executable_path)
 		command->pid = fork();
 	if (command->pid != 0)
 		return ;
-	if (!builtin && !command->executable_path)
+	if (!builtin && !command->executable_path && command->infile.fd == 0)
 	{
 		printf("command not found: %s\n", *command->argv);
 		exit(127);
@@ -112,7 +112,7 @@ static void	execution(t_shell *shell, t_command *command)
 		close(command->infile.fd);
 	if (!builtin && command->outfile.fd != 0)
 		close(command->outfile.fd);
-	if (!builtin)
+	if (!builtin && command->executable_path)
 		execve(command->executable_path, command->argv, shell->env);
 	else if (builtin)
 		builtin(shell, *command);
@@ -125,9 +125,9 @@ void	executor(t_shell *shell, t_list *command_stack)
 
 	while (command_stack)
 	{
-		dup_in_and_out(fd);
 		command = command_stack->content;
 		here_is_the_doc(command);
+		dup_in_and_out(fd);
 		command->argc = ft_lstsize(command->argv_builder);
 		command->argv = (char **) lst_to_array(command->argv_builder);
 		ft_lstclear(&command->argv_builder, NULL);

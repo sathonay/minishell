@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 18:37:00 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/30 00:58:05 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 17:31:48 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	ft_lstdelone(t_list *lst, void (*del)(void*))
 {
-	(*del)(lst->content);
+	if (del)
+		(*del)(lst->content);
 	free(lst);
 }

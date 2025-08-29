@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 18:11:09 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/26 20:00:39 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static char	**ft_strsdup(char **strs)
 	return (dup);
 }
 
-// TODO : to be removed
 void	print_token_stack(t_shell *shell)
 {
 	t_token_stack	*token;
