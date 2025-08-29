@@ -92,7 +92,8 @@ t_expander_result	expande(t_shell *shell, t_token_stack *token)
 		{
 			if (!res.str)
 				return (res);
-			res.str = ft_strjoin(res.str, expand_env_var(shell, res.end->next));
+			res.str = str_concat_consume(res.str,
+				expand_env_var(shell, res.end->next), 2);
 			if ((res.end->next->type & (STR | QSTR | DQSTR)) == 0)
 				break ;
 			res.end = res.end->next;

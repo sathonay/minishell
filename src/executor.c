@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/29 02:18:36 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/29 14:35:20 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,5 +141,4 @@ void	executor(t_shell *shell, t_list *command_stack)
 		command_stack = command_stack->next;
 	}
 	wait_commands(shell, shell->command_list);
-
 }
