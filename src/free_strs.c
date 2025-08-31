@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 15:45:27 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 18:01:37 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/31 15:20:19 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ void	free_str_array(char **strs)
 		return ;
 	i = 0;
 	while (strs && strs[i])
-		free(strs[i++]);
-	if (strs)
-		free(strs);
-	strs = NULL;
+		free_str(&strs[i++]);
+	free(strs);
 }
