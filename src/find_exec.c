@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 00:40:42 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/30 14:45:33 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/31 15:18:57 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	*find_exec(char *exec, char **env)
 	if (!exec)
 		return (NULL);
 	if (access((const char *) exec, X_OK) == 0)
-		return (exec);
+		return (ft_strdup(exec));
 	if (*exec == '.' || *exec == '/')
 		return (NULL);
 	path = find_env_var("PATH", env);
