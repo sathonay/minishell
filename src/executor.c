@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/29 14:35:20 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/31 22:59:45 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,12 @@ static void	*builtins(t_shell *shell, t_command *command)
 		return (ft_cd);
 	if (ft_strcmp(command->argv[0], "exit") == 0)
 		return (ft_exit);
+	if (ft_strcmp(command->argv[0], "echo") == 0)
+		return (ft_echo);
 	return (NULL);
 }
 
-static void	execution(t_shell *shell, t_command *command)
+static int	execution(t_shell *shell, t_command *command)
 {
 	int	(*builtin)(t_shell *, t_command);
 
@@ -98,12 +100,11 @@ static void	execution(t_shell *shell, t_command *command)
 	if (!builtin && command->executable_path)
 		command->pid = fork();
 	if (command->pid != 0)
-		return ;
-	if (!builtin && !command->executable_path && command->infile.fd == 0)
-	{
+		return (0);
+	if (!builtin && !command->executable_path && !command->infile.eof)
 		printf("command not found: %s\n", *command->argv);
-		exit(127);
-	}
+	if (!builtin && !command->executable_path && !command->infile.eof)
+		return (127);
 	if (command->infile.fd != 0)
 		dup2(command->infile.fd, 0);
 	if (command->outfile.fd != 0)
@@ -115,7 +116,8 @@ static void	execution(t_shell *shell, t_command *command)
 	if (!builtin && command->executable_path)
 		execve(command->executable_path, command->argv, shell->env);
 	else if (builtin)
-		builtin(shell, *command);
+		return (builtin(shell, *command));
+	return (0);
 }
 
 void	executor(t_shell *shell, t_list *command_stack)
@@ -131,7 +133,7 @@ void	executor(t_shell *shell, t_list *command_stack)
 		command->argc = ft_lstsize(command->argv_builder);
 		command->argv = (char **) lst_to_array(command->argv_builder);
 		ft_lstclear(&command->argv_builder, NULL);
-		execution(shell, command);
+		shell->exit_code = execution(shell, command);
 		if (command->infile.fd != 0)
 			close(command->infile.fd);
 		if (command->outfile.fd != 0)

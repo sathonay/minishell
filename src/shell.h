@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 18:05:00 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/31 21:40:54 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ Bult in
 int					ft_env(t_shell *shell, t_command command);
 
 int					ft_export(t_shell *shell);
+
+int					ft_echo(t_shell *shell, t_command command);
 
 int					ft_cd(t_shell *shell, t_command command);
 

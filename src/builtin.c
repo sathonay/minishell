@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:50 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 18:04:38 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/31 21:43:36 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,32 @@ int	ft_cd(t_shell *shell, t_command command)
 	return (0);
 }
 
+int	ft_echo(t_shell *shell, t_command command)
+{
+	bool print_new_line;
+
+	(void) shell;
+	command.argv++;
+	print_new_line = !(ft_strncmp(*command.argv, "-n", 2) == 0);
+	if (!print_new_line)
+		command.argv++;
+	while (*command.argv && ft_strncmp(*command.argv, "-n", 2) == 0)
+		command.argv++;
+	while (*command.argv)
+	{
+		printf("%s", *(command.argv++));
+		if (*command.argv)
+			printf(" ");
+	}
+	if (print_new_line)
+		printf("\n");
+	return (0);
+}
+
 int	ft_exit(t_shell *shell, t_command command)
 {
 	(void) command;
-	printf("exiting");
+	printf("exiting\n");
 	free_shell(shell);
 	rl_clear_history();
 	exit(0);

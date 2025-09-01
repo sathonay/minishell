@@ -6,13 +6,11 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 20:00:39 by alrey            ###   ########.fr       */
+/*   Updated: 2025/08/31 15:22:55 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
-
-int	g_signum;
 
 static char	**ft_strsdup(char **strs)
 {
@@ -100,7 +98,6 @@ static void	run_loop(t_shell *shell)
 	{
 		signals_main();
 		shell->input = readline(prompt(shell));
-		printf("signal: %d\n", g_signum);
 		if (!shell->input)
 			break ;
 		signals_cmd();
