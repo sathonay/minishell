@@ -112,7 +112,9 @@ Bult in
 
 int					ft_env(t_shell *shell, t_command command);
 
-int					ft_export(t_shell *shell);
+int					ft_export(t_shell *shell, t_command command);
+
+int					ft_unset(t_shell *shell, t_command command);
 
 int					ft_echo(t_shell *shell, t_command command);
 
@@ -125,6 +127,11 @@ int					ft_exit(t_shell *shell, t_command command);
 void				lex(t_shell *shell);
 
 char				*ft_get_env(t_shell *shell, char *str, size_t size);
+
+
+int	env_set(t_shell *shell, char *name, char *value);
+
+int env_unset(t_shell *shell, char *name);
 
 bool				syntax_valid(char *input);
 

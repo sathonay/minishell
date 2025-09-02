@@ -88,6 +88,10 @@ static void	*builtins(t_shell *shell, t_command *command)
 		return (ft_exit);
 	if (ft_strcmp(command->argv[0], "echo") == 0)
 		return (ft_echo);
+	if (ft_strcmp(command->argv[0], "export") == 0)
+		return (ft_export);
+	if (ft_strcmp(command->argv[0], "unset") == 0)
+		return (ft_unset);
 	return (NULL);
 }
 

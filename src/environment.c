@@ -44,16 +44,78 @@ bool	environement_format(char *input, size_t size)
 	return (size == 0);
 }
 
-char	*env_get(char **env, char *var)
+static size_t nt_array_size(void **array)
 {
-	size_t	len;
+	size_t size;
 
-	len = ft_strlen(var);
+	if (!array)
+		return (0);
+	size = 0;
+	while (array[size])
+		size++;
+	return (size);
+}
+
+static int env_add(t_shell *shell, char *name, char *value)
+{
+	size_t	size;
+	char	**env;
+
+	size = nt_array_size((void **)shell->env);
+	env = ft_calloc(1 + size + 1, sizeof(char *));
+	env[0] = ft_strjoin(name, value);
+	while (size--)
+		env[1 + size] = shell->env[size];
+	free(shell->env);
+	shell->env = env;
+	return (0);
+}
+
+int	env_set(t_shell *shell, char *name, char *value)
+{
+	size_t	size;
+	char	**env;
+
+	size = ft_strlen(name) - 1;
+	env = shell->env;
 	while (*env)
 	{
-		if (ft_strncmp(*env, var, len) == 0 && (*env)[len] == '=')
-			return (*env + len + 1);
+		if ((*env)[size] == '=' && ft_strncmp(*env, name, size) == 0)
+			break ;
 		env++;
 	}
-	return (NULL);
+	if (*env)
+	{
+		free(*env);
+		*env = ft_strjoin(name, value);	
+	}
+	else
+		env_add(shell, name, value);
+	return (0);
+}
+
+int env_unset(t_shell *shell, char *name)
+{
+	size_t size;
+	char	**env;
+
+	size = ft_strlen(name);
+	env = shell->env;
+	while (*env)
+	{
+		if ((*env)[size] == '=' && ft_strncmp(*env, name, size) == 0)
+		{
+			free(*env);
+			break;
+		}
+		env++;
+	}
+	if (!*env)
+		return (1);
+	while (*env)
+	{
+		*env = env[1];
+		env++;
+	}
+	return (0);
 }
