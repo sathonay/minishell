@@ -6,31 +6,13 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/31 22:59:45 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/03 05:48:15 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
 //MOVE TO lst_utils.c
-static void	**lst_to_array(t_list *lst)
-{
-	size_t	index;
-	void	**array;
-
-	index = 0;
-	array = ft_calloc(ft_lstsize(lst) + 1, sizeof(void *));
-	if (!array)
-		return (NULL);
-	while (lst)
-	{
-		array[index] = lst->content;
-		index++;
-		lst = lst->next;
-	}
-	return (array);
-}
-
 static void	wait_commands(t_shell *shell, t_list *command_stack)
 {
 	t_command	*command;
@@ -43,8 +25,7 @@ static void	wait_commands(t_shell *shell, t_list *command_stack)
 		if (WIFEXITED(shell->exit_code))
 			shell->exit_code = WEXITSTATUS(shell->exit_code);
 		if (command->infile.type == HERE_DOC)
-			; // TODO remove heredoc file
-		command_stack = command_stack->next;
+			command_stack = command_stack->next;
 	}
 }
 
@@ -77,7 +58,7 @@ static void	*builtins(t_shell *shell, t_command *command)
 {
 	(void) shell;
 	if (command->argv[0] == NULL)
-		return (NULL); 
+		return (NULL);
 	if (ft_strcmp(command->argv[0], "env") == 0)
 		return (ft_env);
 	if (ft_strcmp(command->argv[0], "pwd") == 0)

@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 15:45:27 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/31 15:20:19 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/03 05:22:49 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	free_str(char **str)
 	if (str && *str)
 	{
 		free(*str);
-		*str = NULL;	
+		*str = NULL;
 	}
 }
 

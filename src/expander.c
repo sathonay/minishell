@@ -6,28 +6,11 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 19:17:27 by alrey             #+#    #+#             */
-/*   Updated: 2025/07/29 19:17:27 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/03 06:03:08 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
-
-static char	*str_concat_consume(char *str1, char *str2, int str_to_consome)
-{
-	char	*concat;
-
-	concat = ft_strjoin(str1, str2);
-	if (str_to_consome == 2)
-	{
-		free_str(&str2);
-		free_str(&str1);
-	}
-	else if (str_to_consome == 1)
-		free_str(&str2);
-	else if (str_to_consome == 0)
-		free_str(&str1);
-	return (concat);
-}
 
 static char	*expand_env_var(t_shell *shell, t_token_stack *token)
 {
@@ -93,7 +76,7 @@ t_expander_result	expande(t_shell *shell, t_token_stack *token)
 			if (!res.str)
 				return (res);
 			res.str = str_concat_consume(res.str,
-				expand_env_var(shell, res.end->next), 2);
+					expand_env_var(shell, res.end->next), 2);
 			if ((res.end->next->type & (STR | QSTR | DQSTR)) == 0)
 				break ;
 			res.end = res.end->next;

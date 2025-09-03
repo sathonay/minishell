@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/31 15:22:55 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/03 05:55:06 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 static char	**ft_strsdup(char **strs)
 {
+// rename to nt_array_dup
+// maybe create to nt_array_cpy for environement.c
 	char	**dup;
 	size_t	size;
 
@@ -45,23 +47,6 @@ void	print_token_stack(t_shell *shell)
 		printf("next %p\n\n", token->next);
 		token = token->next;
 	}
-}
-
-static char	*str_concat_consume(char *str1, char *str2, int str_to_consome)
-{
-	char	*concat;
-
-	concat = ft_strjoin(str1, str2);
-	if (str_to_consome == 2)
-	{
-		free_str(&str2);
-		free_str(&str1);
-	}
-	else if (str_to_consome == 1)
-		free_str(&str2);
-	else if (str_to_consome == 0)
-		free_str(&str1);
-	return (concat);
 }
 
 char	*prompt(t_shell *shell)

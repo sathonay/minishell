@@ -1,31 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   file_descriptor.c                                  :+:      :+:    :+:   */
+/*   lst_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/26 05:38:00 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/03 05:34:54 by alrey            ###   ########.fr       */
+/*   Created: 2025/09/03 05:42:47 by alrey             #+#    #+#             */
+/*   Updated: 2025/09/03 05:48:42 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-void	dup_in_and_out(int fd[2])
+void	**lst_to_array(t_list *lst)
 {
-	fd[0] = dup(0);
-	fd[1] = dup(1);
-}
+	size_t	index;
+	void	**array;
 
-int	dup2_close_old(int old, int new)
-{
-	int	ret;
-
-	ret = dup2(old, new);
-	if (ret == -1)
-		return (ret);
-	if (old != new)
-		close(old);
-	return (ret);
+	index = 0;
+	array = ft_calloc(ft_lstsize(lst) + 1, sizeof(void *));
+	if (!array)
+		return (NULL);
+	while (lst)
+	{
+		array[index] = lst->content;
+		index++;
+		lst = lst->next;
+	}
+	return (array);
 }

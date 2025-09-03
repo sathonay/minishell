@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/31 21:40:54 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/03 05:50:22 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,14 @@ bool				lexer(t_token_stack *token);
 /*
 	Libft+
 */
+
+char	*str_concat_consume(char *str1, char *str2, int str_to_consome);
+
+char	**str_split_first(char *str, char sep);
+
+void	**lst_to_array(t_list *lst);
+
+size_t	nt_array_size(void **array);
 
 char				*ft_strldup(const char *s1, size_t len);
 

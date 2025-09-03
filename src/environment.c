@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 02:28:12 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 03:02:34 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/03 05:30:19 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,19 +44,7 @@ bool	environement_format(char *input, size_t size)
 	return (size == 0);
 }
 
-static size_t nt_array_size(void **array)
-{
-	size_t size;
-
-	if (!array)
-		return (0);
-	size = 0;
-	while (array[size])
-		size++;
-	return (size);
-}
-
-static int env_add(t_shell *shell, char *name, char *value)
+static int	env_add(t_shell *shell, char *name, char *value)
 {
 	size_t	size;
 	char	**env;
@@ -87,16 +75,16 @@ int	env_set(t_shell *shell, char *name, char *value)
 	if (*env)
 	{
 		free(*env);
-		*env = ft_strjoin(name, value);	
+		*env = ft_strjoin(name, value);
 	}
 	else
 		env_add(shell, name, value);
 	return (0);
 }
 
-int env_unset(t_shell *shell, char *name)
+int	env_unset(t_shell *shell, char *name)
 {
-	size_t size;
+	size_t	size;
 	char	**env;
 
 	size = ft_strlen(name);
@@ -106,7 +94,7 @@ int env_unset(t_shell *shell, char *name)
 		if ((*env)[size] == '=' && ft_strncmp(*env, name, size) == 0)
 		{
 			free(*env);
-			break;
+			break ;
 		}
 		env++;
 	}
