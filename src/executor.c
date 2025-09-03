@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/03 05:48:15 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/03 06:43:10 by debian           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ static void	wait_commands(t_shell *shell, t_list *command_stack)
 			waitpid(command->pid, &shell->exit_code, 0);
 		if (WIFEXITED(shell->exit_code))
 			shell->exit_code = WEXITSTATUS(shell->exit_code);
-		if (command->infile.type == HERE_DOC)
-			command_stack = command_stack->next;
+		command_stack = command_stack->next;
 	}
 }
 
@@ -50,7 +49,6 @@ static void	here_is_the_doc(t_command *command)
 		}
 		(free_str(&line), close(infile->fd));
 		infile->fd = open(infile->path, O_CREAT | O_RDONLY, 0777);
-		dprintf(2, "size %d\n", ft_lstsize(command->argv_builder));
 	}
 }
 
