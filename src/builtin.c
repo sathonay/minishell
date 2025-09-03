@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:50 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/03 06:02:28 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/03 06:11:20 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	ft_export(t_shell *shell, t_command command)
 	int		bad_format;
 	char	**split;
 
-	split = split_first(command.argv[1], '=');
+	split = str_split_first(command.argv[1], '=');
 	bad_format = split[0] && !split[1];
 	if (!bad_format)
 	{
