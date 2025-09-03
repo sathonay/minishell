@@ -1,6 +1,8 @@
 SRC_FOLDER	= src/
 SRC=main.c \
+	signal.c \
 	builtin.c \
+	builtin2.c \
 	environment.c \
 	token.c \
 	tokenizer.c \
@@ -9,11 +11,12 @@ SRC=main.c \
 	commander.c \
 	executor.c \
 	find_exec.c \
-	ft_strldup.c \
+	file_descriptor.c \
 	free_strs.c \
 	free_shell.c \
-	signal.c \
-	file_descriptor.c \
+	nt_array.c \
+	str_utils.c \
+	lst_utils.c \
 
 OBJ_FOLDER=objects/
 OBJ		= $(addprefix $(OBJ_FOLDER), $(SRC:.c=.o))
@@ -31,7 +34,7 @@ PRINTF_LIB=$(PRINTF_DIR)libftprintf.a
 HEADERS= $(SRC_FOLDER) $(SRC_FOLDER)libshell $(LIBFT_DIR) $(PRINTF_DIR)include/
 INCLUDES=$(addprefix -I , $(HEADERS))
 
-LIBS=$(LIBFT_LIB) $(PRINTF_LIB) -lreadline
+LIBS=$(LIBFT_LIB) $(PRINTF_LIB) 
 
 NAME = minishell
 
@@ -71,7 +74,7 @@ $(OBJ_FOLDER)%.o: $(SRC_FOLDER)%.c
 
 $(NAME): $(LIBS) $(OBJ) | cat
 	$(call box, $(YELLOW), BUILDING EXECUTABLE..., 0)
-	@$(CC) $(FLAGS) $(OBJ) $(LIBS) -o $@
+	@$(CC) $(FLAGS) $(OBJ) $(LIBS) -lreadline -o $@
 	$(call box, $(GREEN), BUILDING EXECUTABLE, $(OVERLAP))
 
 
