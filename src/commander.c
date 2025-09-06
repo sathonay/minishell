@@ -88,7 +88,6 @@ bool	commander(t_shell *shell)
 	t_token_stack		*token;
 	t_expander_result	expand_res;
 
-
 	token = shell->tokens;
 	if (get_first_token(token, 0x3fc))
 		ft_lstadd_back(&shell->command_list,
