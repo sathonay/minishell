@@ -88,9 +88,11 @@ bool	commander(t_shell *shell)
 	t_token_stack		*token;
 	t_expander_result	expand_res;
 
-	ft_lstadd_back(&shell->command_list,
-		ft_lstnew(ft_calloc(sizeof(t_command), 1)));
+
 	token = shell->tokens;
+	if (get_first_token(token, 0x3fc))
+		ft_lstadd_back(&shell->command_list,
+			ft_lstnew(ft_calloc(sizeof(t_command), 1)));
 	while (token)
 	{
 		token = get_first_token(token, 0x3fc);

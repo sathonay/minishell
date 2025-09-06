@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/03 06:43:10 by debian           ###   ########.fr       */
+/*   Updated: 2025/09/06 13:47:29 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,18 +84,16 @@ static int	execution(t_shell *shell, t_command *command)
 		command->pid = fork();
 	if (command->pid != 0)
 		return (0);
-	if (!builtin && !command->executable_path && !command->infile.eof)
+	if (!builtin && !command->executable_path 
+		&& !command->infile.fd && !command->outfile.fd)
 		printf("command not found: %s\n", *command->argv);
-	if (!builtin && !command->executable_path && !command->infile.eof)
+	if (!builtin && !command->executable_path 
+		&& !command->infile.fd && !command->outfile.fd)
 		return (127);
 	if (command->infile.fd != 0)
-		dup2(command->infile.fd, 0);
+		dup2_close_old(command->infile.fd, 0);
 	if (command->outfile.fd != 0)
-		dup2(command->outfile.fd, 1);
-	if (!builtin && command->infile.fd != 0)
-		close(command->infile.fd);
-	if (!builtin && command->outfile.fd != 0)
-		close(command->outfile.fd);
+		dup2_close_old(command->outfile.fd, 1);
 	if (!builtin && command->executable_path)
 		execve(command->executable_path, command->argv, shell->env);
 	else if (builtin)
@@ -108,6 +106,7 @@ void	executor(t_shell *shell, t_list *command_stack)
 	t_command	*command;
 	int			fd[2];
 
+	printf("%d", ft_lstsize(command_stack));
 	while (command_stack)
 	{
 		command = command_stack->content;

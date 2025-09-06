@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/03 05:50:22 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/06 13:42:18 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,6 @@ typedef struct s_token_stack
 	enum e_token_type		type;
 	struct s_token_stack	*next;
 }			t_token_stack;
-
-typedef struct s_here_doc
-{
-	int		fd[2];
-	char	*path;
-}			t_here_doc;
 
 typedef struct s_redirect
 {
