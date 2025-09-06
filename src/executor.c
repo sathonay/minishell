@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/06 13:47:29 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/06 14:20:09 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ void	executor(t_shell *shell, t_list *command_stack)
 	t_command	*command;
 	int			fd[2];
 
-	printf("%d", ft_lstsize(command_stack));
 	while (command_stack)
 	{
 		command = command_stack->content;
