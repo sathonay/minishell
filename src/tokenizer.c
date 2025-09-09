@@ -12,7 +12,17 @@
 
 #include "shell.h"
 
-static t_token_stack	*new_token(char *start, char *end,
+static int	get_token_length(enum e_token_type type)
+{
+	if (type == PIPE || type == O_FILE || type == I_FILE
+		|| type == STR || type == QSTR || type == DQSTR || type == EMPTY)
+		return (1);
+	else if (type == HERE_DOC || type == O_FILE_APPEND)
+		return (2);
+	return (0);
+}
+
+static t_token_stack	*new_token(char *start,
 										enum e_token_type type)
 {
 	t_token_stack	*token;
@@ -21,7 +31,7 @@ static t_token_stack	*new_token(char *start, char *end,
 	if (token == NULL)
 		return (NULL);
 	token->start = start;
-	token->end = end;
+	token->end = start + get_token_length(type);
 	token->type = type;
 	token->next = NULL;
 	return (token);
@@ -50,24 +60,15 @@ static enum e_token_type	to_token_type(char *input)
 	return (NONE);
 }
 
-static int	get_token_length(enum e_token_type type)
-{
-	if (type == PIPE || type == O_FILE || type == I_FILE
-		|| type == STR || type == QSTR || type == DQSTR || type == EMPTY)
-		return (1);
-	else if (type == HERE_DOC || type == O_FILE_APPEND)
-		return (2);
-	return (0);
-}
 
 static int	extract_token(t_shell *shell, char **head)
 {
 	t_token_stack	*token;
 
-	token = new_token(*head, *head + get_token_length(to_token_type(*head)),
-			to_token_type(*head));
-	if (token == NULL || token->type == NONE)
+	if (to_token_type(*head) == NONE)
 		return (0);
+	token = new_token(*head, to_token_type(*head));
+	append_token(shell, token);
 	if (token->type == STR || token->type == EMPTY)
 	{
 		while (*token->end && to_token_type(token->end) == token->type)
@@ -85,7 +86,6 @@ static int	extract_token(t_shell *shell, char **head)
 	}
 	else
 		*head = token->end;
-	append_token(shell, token);
 	return (1);
 }
 
@@ -98,5 +98,9 @@ int	tokenize(t_shell *shell)
 	input = shell->input;
 	while (*input && extract_token(shell, &input))
 		;
+	if (*input != 0)
+	{
+		printf("unclosed \" or '\n");
+	}
 	return (*input == 0);
 }

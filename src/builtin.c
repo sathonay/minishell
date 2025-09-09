@@ -16,7 +16,11 @@ int	ft_env(t_shell *shell, t_command command)
 {
 	char	**env;
 
-	(void) command;
+	if (!command.argv[1] || nt_array_size((void **) command.argv) > 1)
+	{
+		printf("usage:\n\tenv\n");
+		return (1);
+	}
 	env = shell->env;
 	if (!env)
 		return (0);
@@ -30,6 +34,11 @@ int	ft_export(t_shell *shell, t_command command)
 	int		bad_format;
 	char	**split;
 
+	if (!command.argv[1] || nt_array_size((void **) command.argv) > 2)
+	{
+		printf("usage:\n\texport KEY=VALUE\n");
+		return (1);
+	}
 	split = str_split_first(command.argv[1], '=');
 	bad_format = split[0] && !split[1];
 	if (!bad_format)
@@ -64,6 +73,11 @@ int	ft_pwd(t_shell *shell, t_command command)
 int	ft_cd(t_shell *shell, t_command command)
 {
 	(void) shell;
+	if (!command.argv[1] || nt_array_size((void **) command.argv) > 2)
+	{
+		printf("usage:\n\tcd PATH\n");
+		return (1);
+	}
 	if (chdir(command.argv[1]))
 		printf("cd: %s: %s\n", strerror(errno), command.argv[1]);
 	return (0);

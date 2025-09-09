@@ -36,12 +36,42 @@ int	ft_echo(t_shell *shell, t_command command)
 	return (0);
 }
 
+static int	is_str_int(char *str)
+{
+	char	c;
+	int		i;
+
+	c = '+';
+	i = 0;
+	if (*str == '+' || *str == '-')
+		c = *(str++);
+	while (*str && *str == '0')
+		str++;
+	while (ft_isdigit(str[i]) && i < 10)
+		i++;
+	return (str[i] == '\0'
+		&& (i < 10
+			|| (((!c || c == '+') && ft_strcmp(str, "2147483647") <= 0)
+				|| ((c == '-' && ft_strcmp(str, "2147483648") <= 0)))));
+}
+
 int	ft_exit(t_shell *shell, t_command command)
 {
 	(void) command;
+	int exit_code;
+
+	if ((command.argv[1] && !is_str_int(command.argv[1]))
+		|| nt_array_size((void **) command.argv) > 2)
+	{
+		printf("usage:\n\texit [exit_code]");
+		return (1);
+	}
+	exit_code = 0;
+	if (command.argv[1])
+		exit_code = ft_atoi(command.argv[1]);
 	printf("exiting\n");
 	free_shell(shell);
 	rl_clear_history();
-	exit(0);
+	exit(exit_code);
 	return (0);
 }

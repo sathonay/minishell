@@ -49,10 +49,17 @@ static t_token_stack	*lexing(t_token_stack *token)
 	while (valid)
 	{
 		valid = get_first_token(valid, ALL_NON_EMPTY);
-		if (valid && (valid->type & REDIRECTIONS) > 0)
+		if (valid && (valid->type & PIPE) > 0)
 		{
 			token = get_first_token(valid->next, ALL_NON_EMPTY);
 			if (!token || (token->type & (ALL_NON_EMPTY ^ valid->type)) == 0)
+				return (valid);
+			valid = token;
+		}
+		if (valid && (valid->type & (REDIRECTIONS)) > 0)
+		{
+			token = get_first_token(valid->next, ALL_NON_EMPTY);
+			if (!token || (token->type & (STRINGS)) == 0)
 				return (valid);
 			valid = token;
 		}
