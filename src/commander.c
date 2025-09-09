@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 22:37:19 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/01 22:37:19 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/09 16:32:02 by debian           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "shell.h"
@@ -61,10 +61,12 @@ static t_token_stack	*files_redirect(t_shell *shell, t_token_stack *token)
 	if (token->type & (O_FILE | O_FILE_APPEND))
 		redir = &command->outfile;
 	redir->type = token->type;
+	free_str(&redir->path);
 	if ((redir->type & (I_FILE | O_FILE | O_FILE_APPEND)) > 0)
 		redir->path = expand_res.str;
 	else if (redir->type == HERE_DOC)
 	{
+		free_str(&redir->eof);
 		redir->path = ft_strdup("/tmp/mini_here_doc");
 		redir->eof = expand_res.str;
 	}
