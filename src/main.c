@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/03 05:55:06 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/09 17:16:31 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ int	main(int argc, char **argv, char **env)
 	shell.running = 1;
 	shell.env = ft_strsdup(env);
 	run_loop(&shell);
+	free_str_array(shell.env);
 	rl_clear_history();
 	free_shell(&shell);
 }

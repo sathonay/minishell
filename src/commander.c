@@ -52,14 +52,13 @@ static t_token_stack	*files_redirect(t_shell *shell, t_token_stack *token)
 	t_redirect			*redir;
 
 	expand_res = expande(shell, get_first_token(token, (STR | QSTR | DQSTR)));
-	// TODO check if failed
 	command = (t_command *) ft_lstlast(shell->command_list)->content;
-	if (command->infile.fd != 0)
-		close(command->infile.fd);
 	if (token->type & (I_FILE | HERE_DOC))
 		redir = &command->infile;
 	if (token->type & (O_FILE | O_FILE_APPEND))
 		redir = &command->outfile;
+	if (redir->fd != 0)
+		close(redir->fd);
 	redir->type = token->type;
 	free_str(&redir->path);
 	if ((redir->type & (I_FILE | O_FILE | O_FILE_APPEND)) > 0)
@@ -80,7 +79,12 @@ static t_token_stack	*handle_redirections(t_shell *shell,
 	if (token->type == PIPE)
 		pipe_it(shell);
 	else
-		return (files_redirect(shell, token));
+	{
+		token = files_redirect(shell, token);
+		if (errno)
+			printf("el minishello: %s\n", strerror(errno));
+		return (token);
+	}
 	return (token->next);
 }
 
