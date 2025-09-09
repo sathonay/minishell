@@ -11,13 +11,11 @@
 /* ************************************************************************** */
 #include "shell.h"
 
-static void	pipe_it(t_shell *shell)
+static void	pipe_it(t_shell *shell, t_redirect *redir)
 {
-	t_command	*command;
 	int			fd[2];
 
-	command = (t_command *) ft_lstlast(shell->command_list)->content;
-	if (command->outfile.type != 0)
+	if (redir->type != 0)
 	{
 		ft_lstadd_back(&shell->command_list,
 			ft_lstnew(ft_calloc(sizeof(t_command), 1)));
@@ -25,11 +23,10 @@ static void	pipe_it(t_shell *shell)
 	}
 	if (pipe(fd))
 		return ;
-	command->outfile.fd = fd[1];
+	redir->fd = fd[1];
 	ft_lstadd_back(&shell->command_list,
 		ft_lstnew(ft_calloc(sizeof(t_command), 1)));
-	command = (t_command *) ft_lstlast(shell->command_list)->content;
-	command->infile.fd = fd[0];
+	((t_command *) ft_lstlast(shell->command_list)->content)->infile.fd = fd[0];
 }
 
 static int	redirect_to_file_flags(t_token_type type)
@@ -45,27 +42,17 @@ static int	redirect_to_file_flags(t_token_type type)
 	return (0);
 }
 
-static t_token_stack	*files_redirect(t_shell *shell, t_token_stack *token)
+static t_token_stack	*files_redirect(t_shell *shell, t_redirect *redir,
+	t_token_stack *token)
 {
-	t_command			*command;
 	t_expander_result	expand_res;
-	t_redirect			*redir;
 
 	expand_res = expande(shell, get_first_token(token, (STR | QSTR | DQSTR)));
-	command = (t_command *) ft_lstlast(shell->command_list)->content;
-	if (token->type & (I_FILE | HERE_DOC))
-		redir = &command->infile;
-	if (token->type & (O_FILE | O_FILE_APPEND))
-		redir = &command->outfile;
-	if (redir->fd != 0)
-		close(redir->fd);
 	redir->type = token->type;
-	free_str(&redir->path);
 	if ((redir->type & (I_FILE | O_FILE | O_FILE_APPEND)) > 0)
 		redir->path = expand_res.str;
 	else if (redir->type == HERE_DOC)
 	{
-		free_str(&redir->eof);
 		redir->path = ft_strdup("/tmp/mini_here_doc");
 		redir->eof = expand_res.str;
 	}
@@ -76,16 +63,28 @@ static t_token_stack	*files_redirect(t_shell *shell, t_token_stack *token)
 static t_token_stack	*handle_redirections(t_shell *shell,
 	t_token_stack *token)
 {
+	t_command	*cmd;
+	t_redirect	*affected_redirect;
+
+	cmd = ft_lstlast(shell->command_list)->content;
 	if (token->type == PIPE)
-		pipe_it(shell);
+		pipe_it(shell, &cmd->outfile);
 	else
 	{
-		token = files_redirect(shell, token);
-		if (errno)
-			printf("el minishello: %s\n", strerror(errno));
-		return (token);
+		if (token->type & (I_FILE | HERE_DOC))
+			affected_redirect = &cmd->infile;
+		if (token->type & (O_FILE | O_FILE_APPEND))
+			affected_redirect = &cmd->outfile;
+		if (affected_redirect->fd > 0)
+			close(affected_redirect->fd);
+		free_str(&affected_redirect->path);
+		free_str(&affected_redirect->eof);
+		token = files_redirect(shell, affected_redirect, token);
+		if (affected_redirect->fd == -1)
+			printf("el minishello: %s: %s\n",
+				strerror(errno), affected_redirect->path);
 	}
-	return (token->next);
+	return (token);
 }
 
 bool	commander(t_shell *shell)
