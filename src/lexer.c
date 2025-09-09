@@ -12,6 +12,35 @@
 
 #include "shell.h"
 
+/*static t_token_stack	*lexing(t_token_stack *token)
+{
+	t_token_stack	*valid;
+
+	valid = token;
+	while (valid)
+	{
+		valid = get_first_token(valid, 0x3fc);
+		if (valid && valid->type == PIPE)
+		{
+			token = get_first_token(valid->next, 0x3fc);
+			if (!token || (token->type & (STR | DQSTR | QSTR)) == 0)
+				return (valid);
+			valid = token;
+		}
+		if (valid && (valid->type & (O_FILE | I_FILE | O_FILE_APPEND | HERE_DOC
+					| PIPE)) > 0)
+		{
+			token = get_first_token(valid->next, 0x3fc);
+			if (!token || (token->type & ((STR | DQSTR | QSTR))) == 0)
+				return (valid);
+			valid = token;
+		}
+		if (valid)
+			valid = valid->next;
+	}
+	return (NULL);
+}*/
+
 static t_token_stack	*lexing(t_token_stack *token)
 {
 	t_token_stack	*valid;
@@ -20,18 +49,10 @@ static t_token_stack	*lexing(t_token_stack *token)
 	while (valid)
 	{
 		valid = get_first_token(valid, ALL_NON_EMPTY);
-		if (valid && valid->type == PIPE)
+		if (valid && (valid->type & REDIRECTIONS) > 0)
 		{
 			token = get_first_token(valid->next, ALL_NON_EMPTY);
-			if (!token || (token->type & (STR | DQSTR | QSTR)) == 0)
-				return (valid);
-			valid = token;
-		}
-		if (valid && (valid->type & (O_FILE | I_FILE | O_FILE_APPEND | HERE_DOC
-					| PIPE)) > 0)
-		{
-			token = get_first_token(valid->next, ALL_NON_EMPTY);
-			if (!token || (token->type & ((STR | DQSTR | QSTR))) == 0)
+			if (!token || (token->type & (ALL_NON_EMPTY ^ valid->type)) == 0)
 				return (valid);
 			valid = token;
 		}
