@@ -94,12 +94,12 @@ bool	commander(t_shell *shell)
 	t_expander_result	expand_res;
 
 	token = shell->tokens;
-	if (get_first_token(token, 0x3fc))
+	if (get_first_token(token, ALL_NON_EMPTY))
 		ft_lstadd_back(&shell->command_list,
 			ft_lstnew(ft_calloc(sizeof(t_command), 1)));
 	while (token)
 	{
-		token = get_first_token(token, 0x3fc);
+		token = get_first_token(token, ALL_NON_EMPTY);
 		if (!token)
 			break ;
 		if ((token->type & (STR | QSTR | DQSTR)))

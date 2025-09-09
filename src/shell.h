@@ -39,6 +39,7 @@ enum	e_token_type
 	I_FILE			= 0b0010000000,
 	O_FILE			= 0b0100000000,
 	O_FILE_APPEND	= 0b1000000000,
+	ALL_NON_EMPTY	= 0b1111111100,
 };
 
 typedef enum e_token_type	t_token_type;

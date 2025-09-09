@@ -19,10 +19,10 @@ static t_token_stack	*lexing(t_token_stack *token)
 	valid = token;
 	while (valid)
 	{
-		valid = get_first_token(valid, 0x3fc);
+		valid = get_first_token(valid, ALL_NON_EMPTY);
 		if (valid && valid->type == PIPE)
 		{
-			token = get_first_token(valid->next, 0x3fc);
+			token = get_first_token(valid->next, ALL_NON_EMPTY);
 			if (!token || (token->type & (STR | DQSTR | QSTR)) == 0)
 				return (valid);
 			valid = token;
@@ -30,7 +30,7 @@ static t_token_stack	*lexing(t_token_stack *token)
 		if (valid && (valid->type & (O_FILE | I_FILE | O_FILE_APPEND | HERE_DOC
 					| PIPE)) > 0)
 		{
-			token = get_first_token(valid->next, 0x3fc);
+			token = get_first_token(valid->next, ALL_NON_EMPTY);
 			if (!token || (token->type & ((STR | DQSTR | QSTR))) == 0)
 				return (valid);
 			valid = token;
