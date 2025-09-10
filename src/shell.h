@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/06 13:42:18 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/10 18:57:22 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,13 +101,14 @@ bool				lexer(t_token_stack *token);
 	Libft+
 */
 
-char	*str_concat_consume(char *str1, char *str2, int str_to_consome);
+char				*str_concat_consume(char *str1, char *str2,
+						int str_to_consome);
 
-char	**str_split_first(char *str, char sep);
+char				**str_split_first(char *str, char sep);
 
-void	**lst_to_array(t_list *lst);
+void				**lst_to_array(t_list *lst);
 
-size_t	nt_array_size(void **array);
+size_t				nt_array_size(void **array);
 
 char				*ft_strldup(const char *s1, size_t len);
 
@@ -133,10 +134,9 @@ void				lex(t_shell *shell);
 
 char				*ft_get_env(t_shell *shell, char *str, size_t size);
 
+int					env_set(t_shell *shell, char *name, char *value);
 
-int	env_set(t_shell *shell, char *name, char *value);
-
-int env_unset(t_shell *shell, char *name);
+int					env_unset(t_shell *shell, char *name);
 
 bool				syntax_valid(char *input);
 
