@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 00:40:46 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 02:35:46 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/10 18:59:18 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ static enum e_token_type	to_token_type(char *input)
 		return (STR);
 	return (NONE);
 }
-
 
 static int	extract_token(t_shell *shell, char **head)
 {

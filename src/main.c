@@ -6,16 +6,16 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/09 17:16:31 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/10 18:58:53 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-static char	**ft_strsdup(char **strs)
-{
 // rename to nt_array_dup
 // maybe create to nt_array_cpy for environement.c
+static char	**ft_strsdup(char **strs)
+{
 	char	**dup;
 	size_t	size;
 

@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 02:34:13 by alrey             #+#    #+#             */
-/*   Updated: 2025/08/26 02:34:13 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/10 18:58:30 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,13 @@ void	main_sigquit(int signum)
 	rl_redisplay();
 }
 
-// TODO maybe find a better way :x
-// SIGPIPE fix: echo salut | < salut cat (causing SIGPIPE because the read end of the pipe is closed and replaced by de I_FILE) 
+/*
+TODO maybe find a better way :x
+// SIGPIPE fix:
+	echo salut | < salut cat
+	(causing SIGPIPE because the read end of the pipe is closed and replaced
+	by de I_FILE) 
+*/
 void	signals_main(void)
 {
 	signal(SIGINT, main_sigint);

@@ -6,14 +6,13 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 06:34:25 by alrey             #+#    #+#             */
-/*   Updated: 2025/04/11 06:41:33 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/10 19:00:51 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 char	*ft_strchrnul(const char *s, int c)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (s[i])

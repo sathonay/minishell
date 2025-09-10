@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 05:58:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/09 17:15:48 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/10 18:59:36 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,9 @@ static int	is_str_int(char *str)
 
 int	ft_exit(t_shell *shell, t_command command)
 {
-	(void) command;
-	int exit_code;
+	int	exit_code;
 
+	(void) command;
 	if ((command.argv[1] && !is_str_int(command.argv[1]))
 		|| nt_array_size((void **) command.argv) > 2)
 	{
