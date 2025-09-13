@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/10 18:58:53 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/12 16:47:31 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	*prompt(t_shell *shell)
 		prompt = str_concat_consume(prompt,
 				ft_strjoin("~", path + ft_strlen(home)), 2);
 	else
-		prompt = ft_strjoin(prompt, path);
+		prompt = str_concat_consume(prompt, path, 0);
 	prompt = str_concat_consume(prompt, "$ ", 0);
 	free_str(&shell->prompt);
 	shell->prompt = prompt;

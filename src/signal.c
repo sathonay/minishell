@@ -34,23 +34,14 @@ void	main_sigquit(int signum)
 	rl_redisplay();
 }
 
-/*
-TODO maybe find a better way :x
-// SIGPIPE fix:
-	echo salut | < salut cat
-	(causing SIGPIPE because the read end of the pipe is closed and replaced
-	by de I_FILE) 
-*/
 void	signals_main(void)
 {
 	signal(SIGINT, main_sigint);
 	signal(SIGQUIT, SIG_IGN);
-	signal(SIGPIPE, SIG_DFL);
 }
 
 void	signals_cmd(void)
 {
 	signal(SIGINT, cmd_sigint);
 	signal(SIGQUIT, cmd_sigint);
-	signal(SIGPIPE, SIG_IGN);
 }

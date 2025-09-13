@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 05:38:00 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/09 16:34:58 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/12 15:49:34 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	dup2_close_old(int old, int new)
 {
 	int	ret;
 
-	if (old == -1)
+	if (old <= 0)
 		return (-1);
 	ret = dup2(old, new);
 	if (ret == -1)
@@ -30,4 +30,11 @@ int	dup2_close_old(int old, int new)
 	if (old != new)
 		close(old);
 	return (ret);
+}
+
+void	close_fd(int *fd)
+{
+	if (*fd > 0)
+		close(*fd);
+	*fd = 0;
 }

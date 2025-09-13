@@ -11,22 +11,17 @@
 /* ************************************************************************** */
 #include "shell.h"
 
-static void	pipe_it(t_shell *shell, t_redirect *redir)
+static void	pipe_it(t_shell *shell, int *pipefd)
 {
 	int			fd[2];
 
-	if (redir->type != 0)
-	{
-		ft_lstadd_back(&shell->command_list,
-			ft_lstnew(ft_calloc(sizeof(t_command), 1)));
-		return ;
-	}
 	if (pipe(fd))
 		return ;
-	redir->fd = fd[1];
+	pipefd[1] = fd[1];
 	ft_lstadd_back(&shell->command_list,
 		ft_lstnew(ft_calloc(sizeof(t_command), 1)));
-	((t_command *) ft_lstlast(shell->command_list)->content)->infile.fd = fd[0];
+	pipefd = ((t_command *) ft_lstlast(shell->command_list)->content)->pipe;
+	pipefd[0] = fd[0];
 }
 
 static int	redirect_to_file_flags(t_token_type type)
@@ -68,7 +63,7 @@ static t_token_stack	*handle_redirections(t_shell *shell,
 
 	cmd = ft_lstlast(shell->command_list)->content;
 	if (token->type == PIPE)
-		pipe_it(shell, &cmd->outfile);
+		pipe_it(shell, cmd->pipe);
 	else
 	{
 		if (token->type & (I_FILE | HERE_DOC))

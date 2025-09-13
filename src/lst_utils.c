@@ -29,3 +29,11 @@ void	**lst_to_array(t_list *lst)
 	}
 	return (array);
 }
+
+/*static void *lst_previous(t_list *list, t_list *node)
+{
+  // Unstatic
+  while (list->next && list->next != node)
+      list = list->next;
+  return (list);
+}*/

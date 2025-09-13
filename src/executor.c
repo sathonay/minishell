@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/09 17:33:03 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/12 16:00:07 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,10 +90,10 @@ static int	execution(t_shell *shell, t_command *command)
 	if (!builtin && !command->executable_path
 		&& !command->infile.fd && !command->outfile.fd)
 		return (127);
-	if (command->infile.fd > 0)
-		dup2_close_old(command->infile.fd, 0);
-	if (command->outfile.fd > 0)
-		dup2_close_old(command->outfile.fd, 1);
+	dup2_close_old(command->pipe[0], 0);
+	dup2_close_old(command->infile.fd, 0);
+	dup2_close_old(command->pipe[1], 1);
+	dup2_close_old(command->outfile.fd, 1);
 	if (!builtin && command->executable_path)
 		execve(command->executable_path, command->argv, shell->env);
 	else if (builtin)
@@ -118,10 +118,10 @@ void	executor(t_shell *shell, t_list *command_stack)
 			shell->exit_code = execution(shell, command);
 		else
 			shell->exit_code = 1;
-		if (command->infile.fd > 0)
-			close(command->infile.fd);
-		if (command->outfile.fd > 0)
-			close(command->outfile.fd);
+		close_fd(&command->pipe[0]);
+		close_fd(&command->pipe[1]);
+		close_fd(&command->infile.fd);
+		close_fd(&command->outfile.fd);
 		dup2_close_old(fd[0], 0);
 		dup2_close_old(fd[1], 1);
 		command_stack = command_stack->next;
