@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/10 18:57:22 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/12 15:48:48 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,11 @@ typedef struct s_command
 {
 	pid_t		pid;
 	t_list		*argv_builder;
-	t_redirect	infile;
 	int			argc;
 	char		**argv;
 	char		*executable_path;
+	int			pipe[2];
+	t_redirect	infile;
 	t_redirect	outfile;
 }				t_command;
 
@@ -189,5 +190,7 @@ void				signals_cmd(void);
 void				dup_in_and_out(int fd[2]);
 
 int					dup2_close_old(int old, int new);
+
+void				close_fd(int *fd);
 
 #endif
