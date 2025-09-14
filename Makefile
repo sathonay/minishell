@@ -1,8 +1,9 @@
-SRC_FOLDER	= src/
+SRC_FOLDER	= 
 SRC=main.c \
 	signal.c \
 	builtin.c \
 	builtin2.c \
+	redirection.c \
 	environment.c \
 	token.c \
 	tokenizer.c \
@@ -23,13 +24,10 @@ OBJ		= $(addprefix $(OBJ_FOLDER), $(SRC:.c=.o))
 
 
 CC = clang
-FLAGS=-Wall -Wextra -Werror -fsanitize=address
+FLAGS=-Wall -Wextra -Werror #-fsanitize=address
 
 LIBFT_DIR=libft/
 LIBFT_LIB=$(LIBFT_DIR)libft.a
-
-PRINTF_DIR=printf/
-PRINTF_LIB=$(PRINTF_DIR)libftprintf.a
 
 HEADERS= $(SRC_FOLDER) $(SRC_FOLDER)libshell $(LIBFT_DIR) $(PRINTF_DIR)include/
 INCLUDES=$(addprefix -I , $(HEADERS))
@@ -83,11 +81,6 @@ $(LIBFT_LIB): | cat
 	@make --silent -C $(LIBFT_DIR) bonus
 	$(call box, $(GREEN), LIBFT BUILD SUCCESS, $(OVERLAP))
 
-$(PRINTF_LIB): | cat
-	$(call box, $(YELLOW), BUILDING PRINTF..., 0)
-	@make --silent -C $(PRINTF_DIR)
-	$(call box, $(GREEN), PRINTF BUILD SUCCESS, $(OVERLAP))
-
 cat: 
 	@echo -e "$(CAT_C)⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀ "
 	@echo -e "$(CAT_C)⠀⠀⠀⠀⢀⡴⣆⠀⠀⠀⠀⠀⣠⡀⠀⠀⠀⠀⠀⠀⣼⣿⡗⠀⠀⠀⠀"
@@ -108,14 +101,12 @@ clean: cat
 	@rm -fr $(OBJ_FOLDER)
 	@rm -fr $(TARGET)
 	@make --silent -C $(LIBFT_DIR) clean
-	@make --silent -C $(PRINTF_DIR) clean
 	$(call box, $(GREEN), CLEANING, $(OVERLAP))
 
 fclean: cat clean
 	$(call box, $(RED), CLEANING LIBS, 0)
 	@rm -fr $(NAME)
 	@make --silent -C $(LIBFT_DIR) fclean
-	@make --silent -C $(PRINTF_DIR) fclean
 	$(call box, $(GREEN), CLEANING LIBS, $(OVERLAP))
 
 .PHONY: all re clean fclean cat
