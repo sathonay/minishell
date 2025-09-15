@@ -56,26 +56,28 @@ int	ft_export(t_shell *shell, t_command command)
 	int		bad_format;
 	char	**split;
 
-	if (!command.argv[1] || nt_array_size((void **) command.argv) > 2)
+	if (nt_array_size((void **) command.argv) < 2)
+		return (0);
+	while (command.argv[1])
 	{
-		printf("usage:\n\texport KEY=VALUE\n");
-		return (1);
+		split = str_split_first(command.argv[1], '=');
+		bad_format = split[0] && !split[1];
+		if (!bad_format)
+			env_set(shell, split[0], split[1]);
+		free_str_array(split);
+		command.argv++;
 	}
-	split = str_split_first(command.argv[1], '=');
-	bad_format = split[0] && !split[1];
-	if (!bad_format)
-	{
-		split[0] = str_concat_consume(split[0], "=", 0);
-		env_set(shell, split[0], split[1]);
-	}
-	free_str_array(split);
-	return (bad_format);
+	return (0);
 }
 
 int	ft_unset(t_shell *shell, t_command command)
 {
-	env_unset(shell, command.argv[1]);
-	return (9);
+	while (command.argv[1])
+	{
+		env_unset(shell, command.argv[1]);
+		command.argv++;
+	}
+	return (0);
 }
 
 int	ft_pwd(t_shell *shell, t_command command)
@@ -86,7 +88,10 @@ int	ft_pwd(t_shell *shell, t_command command)
 	(void) command;
 	path = getcwd(NULL, 0);
 	if (!path)
+	{
+		printf("el minishello: pwd: %s\n", strerror(errno));
 		return (1);
+	}
 	printf("%s\n", path);
 	free(path);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 05:58:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/15 09:06:09 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/15 15:02:44 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,26 @@
 
 int	ft_cd(t_shell *shell, t_command command)
 {
-	(void) shell;
-	if (!command.argv[1] || nt_array_size((void **) command.argv) > 2)
+	char	*path;
+
+	if (nt_array_size((void **) command.argv) > 2)
+		return (printf("usage:\n\tcd PATH\n"), 1);
+	if (nt_array_size((void **) command.argv) == 1)
 	{
-		printf("usage:\n\tcd PATH\n");
-		return (1);
+		path = ft_get_env(shell, "HOME", 4);
+		if (!path)
+			return (printf("el minishello: cd : HOME not set"), 1);
 	}
-	if (chdir(command.argv[1]))
+	if (nt_array_size((void **) command.argv) == 2)
+		path = command.argv[1];
+	if (nt_array_size((void **) command.argv) == 2
+		&& ft_strcmp(path, "-") == 0)
+	{
+		path = ft_get_env(shell, "OLDPWD", 6);
+		if (!path)
+			return (printf("el minishello: cd : OLDPWD not set"), 1);
+	}
+	if (ft_chdir(shell, path))
 		printf("cd: %s: %s\n", strerror(errno), command.argv[1]);
 	return (0);
 }
@@ -73,8 +86,7 @@ int	ft_exit(t_shell *shell, t_command command)
 	int	exit_code;
 
 	(void) command;
-	if ((command.argv[1] && !is_str_int(command.argv[1]))
-		|| nt_array_size((void **) command.argv) > 2)
+	if (nt_array_size((void **) command.argv) > 2)
 	{
 		printf("usage:\n\texit [exit_code]\n");
 		return (1);
@@ -82,7 +94,9 @@ int	ft_exit(t_shell *shell, t_command command)
 	if (command.prev_pipe[0] > 0 || command.next_pipe[1] > 0)
 		return (0);
 	exit_code = 0;
-	if (command.argv[1])
+	if (command.argv[1] && !is_str_int(command.argv[1]))
+		exit_code = 2;
+	if (command.argv[1] && is_str_int(command.argv[1]))
 		exit_code = ft_atoi(command.argv[1]);
 	write(2, "exiting\n", ft_strlen("exiting\n"));
 	free_shell(shell);

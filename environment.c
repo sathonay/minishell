@@ -51,7 +51,7 @@ static int	env_add(t_shell *shell, char *name, char *value)
 
 	size = nt_array_size((void **)shell->env);
 	env = ft_calloc(1 + size + 1, sizeof(char *));
-	env[0] = ft_strjoin(name, value);
+	env[0] = str_concat_consume(str_concat_consume(name, "=", -1), value, 0);
 	while (size--)
 		env[1 + size] = shell->env[size];
 	free(shell->env);
@@ -64,7 +64,7 @@ int	env_set(t_shell *shell, char *name, char *value)
 	size_t	size;
 	char	**env;
 
-	size = ft_strlen(name) - 1;
+	size = ft_strlen(name);
 	env = shell->env;
 	while (*env)
 	{
@@ -75,7 +75,7 @@ int	env_set(t_shell *shell, char *name, char *value)
 	if (*env)
 	{
 		free(*env);
-		*env = ft_strjoin(name, value);
+		*env = str_concat_consume(str_concat_consume(name, "=", -1), value, 0);
 	}
 	else
 		env_add(shell, name, value);

@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/15 11:48:54 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/15 15:05:12 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,5 +212,7 @@ void				apply_redirection(t_command command);
 void				stack_args(t_command *command);
 
 void				close_pipe(int pips[2], int wclose);
+
+int					ft_chdir(t_shell *shell, char *path);
 
 #endif

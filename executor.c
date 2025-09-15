@@ -67,35 +67,6 @@ static void	exec_fork(t_shell *shell, t_command *command)
 	exit (127);
 }
 
-/*static int	recursive_execution(t_shell *shell, t_list *command_stack)
-{
-	int	(*builtin)(t_shell *, t_command);
-
-	here_is_the_doc(command);
-	builtin = find_builtin(shell, command->argv[0]);
-	if (builtin && command->next_pipe[0] <= 0)
-		return (exec_builtin(builtin, shell, *command));
-	command->executable_path = find_exec(*command->argv, shell->env);
-	if ((command->executable_path || command->next_pipe[0] > 0)
-		&& (command->infile.fd > 0 || command->outfile.fd > 0))
-		command->pid = fork();
-	if (!command->executable_path
-		&& (command->infile.fd > 0 || command->outfile.fd > 0))
-		return (0);
-	if (command->pid != 0)
-		return (0);
-	if (!command->executable_path)
-		return (printf("command not found: %s\n", *command->argv), 127);
-	if (command->next_pipe[0] > 0 && command_stack->next)
-		execution(shell, command_stack->next);
-	if (builtin)
-		exit(exec_builtin(builtin, shell, *command));
-	apply_redirection(*command);
-	if (command->executable_path)
-		execve(command->executable_path, command->argv, shell->env);
-	exit(127);
-}*/
-
 static void	recursive_execution(t_shell *shell, t_list *command_stack)
 {
 	int			(*builtin)(t_shell *, t_command);
@@ -115,6 +86,10 @@ static void	recursive_execution(t_shell *shell, t_list *command_stack)
 	if (command->next_pipe[1] > 0)
 		recursive_execution(shell, command_stack->next);
 	exec_fork(shell, command);
+	if (command->prev_pipe[0] > 0)
+		close(command->prev_pipe[0]);
+	if (command->next_pipe[1] > 0)
+		close(command->next_pipe[1]);
 }
 
 void	executor(t_shell *shell, t_list *command_stack)

@@ -19,6 +19,7 @@ SRC=main.c \
 	str_utils.c \
 	lst_utils.c \
 	command_utils.c \
+	shell_utils.c \
 
 OBJ_FOLDER=objects/
 OBJ		= $(addprefix $(OBJ_FOLDER), $(SRC:.c=.o))
