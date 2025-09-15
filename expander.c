@@ -41,43 +41,22 @@ static char	*expand_env_var(t_shell *shell, t_token_stack *token)
 	return (str);
 }
 
-static void	**ft_list_to_array(t_list *list)
-{
-	void	**array;
-	size_t	i;
-
-	if (!list)
-		return (NULL);
-	array = ft_calloc(ft_lstsize(list) + 1, sizeof(void *));
-	if (!array)
-		return (NULL);
-	i = 0;
-	while (list)
-	{
-		array[i] = list->content;
-		list = list->next;
-		i++;
-	}
-	return (array);
-}
-
 t_expander_result	expande(t_shell *shell, t_token_stack *token)
 {
 	t_expander_result	res;
 
 	res.str = NULL;
 	res.end = token;
-	(void) ft_list_to_array(NULL);
-	if (res.end && (res.end->type & (STR | QSTR | DQSTR)))
+	if (res.end && (res.end->type & (STRINGS)))
 	{
 		res.str = expand_env_var(shell, res.end);
-		while (res.end->next && (res.end->next->type & (STR | QSTR | DQSTR)))
+		while (res.end->next && (res.end->next->type & (STRINGS)))
 		{
 			if (!res.str)
 				return (res);
 			res.str = str_concat_consume(res.str,
 					expand_env_var(shell, res.end->next), 2);
-			if ((res.end->next->type & (STR | QSTR | DQSTR)) == 0)
+			if ((res.end->next->type & (STRINGS)) == 0)
 				break ;
 			res.end = res.end->next;
 		}

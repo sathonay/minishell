@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:47:22 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/14 18:16:05 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/15 07:33:04 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,12 @@ static void	run_loop(t_shell *shell)
 		if (!shell->input)
 			break ;
 		signals_cmd();
-		if (tokenize(shell) && lexer(shell->tokens) && commander(shell))
+		errno = 0;
+		if (tokenize(shell) && lexer(shell->tokens) && commander(shell)
+			&& errno == 0)
 			executor(shell, shell->command_list);
+		if (errno != 0)
+			printf("el minishello: %s\n", strerror(errno));
 		add_history(shell->input);
 		free_shell(shell);
 	}

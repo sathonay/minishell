@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:34:56 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/14 21:12:33 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/15 11:48:54 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <stdbool.h>
+# include <stdint.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/wait.h>
@@ -69,9 +70,10 @@ typedef struct s_command
 	int			argc;
 	char		**argv;
 	char		*executable_path;
-	int			pipe[2];
+	int			prev_pipe[2];
 	t_redirect	infile;
 	t_redirect	outfile;
+	int			next_pipe[2];
 }				t_command;
 
 typedef struct s_shell
@@ -108,6 +110,8 @@ char				*str_concat_consume(char *str1, char *str2,
 char				**str_split_first(char *str, char sep);
 
 void				**lst_to_array(t_list *lst);
+
+int					ft_lstappend_cstruct(t_list **lst, size_t struct_size);
 
 size_t				nt_array_size(void **array);
 
@@ -201,6 +205,12 @@ int					dup2_close_old(int old, int new);
 
 void				close_fd(int *fd);
 
+void				here_is_the_doc(t_command *command);
+
 void				apply_redirection(t_command command);
+
+void				stack_args(t_command *command);
+
+void				close_pipe(int pips[2], int wclose);
 
 #endif

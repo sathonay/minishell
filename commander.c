@@ -11,25 +11,30 @@
 /* ************************************************************************** */
 #include "shell.h"
 
-static void	pipe_it(t_shell *shell, int *pipefd)
+static void	pipe_it(t_shell *shell, int *pips)
 {
-	int			fd[2];
-
-	if (pipe(fd))
+	if (pipe(pips))
 	{
 		printf("el minishello: %s\n",
 			strerror(errno));
-		pipefd[1] = -1;
-		ft_lstadd_back(&shell->command_list,
-			ft_lstnew(ft_calloc(sizeof(t_command), 1)));
-		pipefd[0] = -1;
+		errno = 0;
+		if (!ft_lstappend_cstruct(&shell->command_list, sizeof(t_command)))
+		{
+			printf("NEM: failed to allocate command struct\n");
+			return ;
+		}
+		pips[1] = -1;
+		pips[0] = -1;
 		return ;
 	}
-	pipefd[1] = fd[1];
-	ft_lstadd_back(&shell->command_list,
-		ft_lstnew(ft_calloc(sizeof(t_command), 1)));
-	pipefd = ((t_command *) ft_lstlast(shell->command_list)->content)->pipe;
-	pipefd[0] = fd[0];
+	if (!ft_lstappend_cstruct(&shell->command_list, sizeof(t_command)))
+	{
+		printf("NEM: failed to allocate command struct\n");
+		(close(pips[0]), close(pips[1]));
+		return ;
+	}
+	ft_memcpy(((t_command *) ft_lstlast(shell->command_list)->content)
+		->prev_pipe, pips, sizeof(int) * 2);
 }
 
 static int	redirect_to_file_flags(t_token_type type)
@@ -59,6 +64,14 @@ static t_token_stack	*files_redirect(t_shell *shell, t_redirect *redir,
 		redir->path = ft_strdup("/tmp/mini_here_doc");
 		redir->eof = expand_res.str;
 	}
+	if (!redir->path)
+	{
+		printf("el minishello: redirection failed: path null\n");
+		redir->fd = -1;
+		return (expand_res.end);
+	}
+	if (redir->type == HERE_DOC)
+		return (expand_res.end);
 	redir->fd = open(redir->path, redirect_to_file_flags(redir->type), 0777);
 	return (expand_res.end);
 }
@@ -71,7 +84,7 @@ static t_token_stack	*handle_redirections(t_shell *shell,
 
 	cmd = ft_lstlast(shell->command_list)->content;
 	if (token->type == PIPE)
-		pipe_it(shell, cmd->pipe);
+		pipe_it(shell, cmd->next_pipe);
 	else
 	{
 		if (token->type & (I_FILE | HERE_DOC))
@@ -83,9 +96,12 @@ static t_token_stack	*handle_redirections(t_shell *shell,
 		free_str(&affected_redirect->path);
 		free_str(&affected_redirect->eof);
 		token = files_redirect(shell, affected_redirect, token);
-		if (affected_redirect->fd == -1)
-			printf("el minishello: %s: %s\n",
-				strerror(errno), affected_redirect->path);
+		if (errno != 0)
+		{
+			printf("el minishello: %s: %s\n", strerror(errno),
+				affected_redirect->path);
+			errno = 0;
+		}
 	}
 	return (token);
 }
@@ -97,24 +113,24 @@ bool	commander(t_shell *shell)
 	t_expander_result	expand_res;
 
 	token = shell->tokens;
-	if (get_first_token(token, ALL_NON_EMPTY))
-		ft_lstadd_back(&shell->command_list,
-			ft_lstnew(ft_calloc(sizeof(t_command), 1)));
+	if (!get_first_token(token, ALL_NON_EMPTY)
+		|| !ft_lstappend_cstruct(&shell->command_list, sizeof(t_command)))
+		return (0);
 	while (token)
 	{
 		token = get_first_token(token, ALL_NON_EMPTY);
-		if (!token)
+		if (!token || errno != 0)
 			break ;
-		if ((token->type & (STRINGS)))
+		if (!errno && (token->type & (STRINGS)))
 		{
 			expand_res = expande(shell, token);
 			command = (t_command *) ft_lstlast(shell->command_list)->content;
 			ft_lstadd_back(&command->argv_builder, ft_lstnew(expand_res.str));
 			token = expand_res.end;
 		}
-		if (token->type & (REDIRECTIONS | PIPE))
+		if (!errno && token->type & (REDIRECTIONS | PIPE))
 			token = handle_redirections(shell, token);
 		token = token->next;
 	}
-	return (1);
+	return (errno == 0);
 }

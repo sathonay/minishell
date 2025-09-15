@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 18:37:00 by alrey             #+#    #+#             */
-/*   Updated: 2024/11/16 23:29:04 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/15 07:32:03 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ void	*ft_calloc(size_t count, size_t size)
 {
 	char	*ptr;
 
-	if (((((long) count) < 0) || (((long) size) < 0)) && (count && size))
-		return (NULL);
 	size *= count;
 	ptr = malloc(sizeof(char) * size);
 	if (!ptr)

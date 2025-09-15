@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 05:58:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/14 21:06:32 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/15 09:06:09 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	ft_exit(t_shell *shell, t_command command)
 		printf("usage:\n\texit [exit_code]\n");
 		return (1);
 	}
-	if (command.pipe[0] > 0 || command.pipe[1] > 0)
+	if (command.prev_pipe[0] > 0 || command.next_pipe[1] > 0)
 		return (0);
 	exit_code = 0;
 	if (command.argv[1])
