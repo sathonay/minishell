@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/19 12:23:34 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/19 17:44:50 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,22 @@ static int	get_exit_status(int stat_loc)
 		return (128 + WTERMSIG(stat_loc));
 }
 
-static int	wait_commands(t_shell *shell, t_command last_command)
+static int	wait_commands(t_shell *shell)
 {
-	int exit_code;
-	int stat_loc;
-	int n_command;
+	int			exit_code;
+	int			stat_loc;
+	int			n_command;
+	t_list		*command_stack;
+	t_command	last_command;
 
 	exit_code = 0;
+	if (!shell->command_list)
+		return (-1);
 	n_command = ft_lstsize(shell->command_list);
+	command_stack = ft_lstlast(shell->command_list);
+	if (!command_stack)
+		return (-1);
+	last_command = *((t_command *)command_stack->content);
 	while (n_command--)
 	{
 		pid_t pid = wait(&stat_loc);
@@ -52,7 +60,8 @@ static int	exec_builtin(int (*builtin)(t_shell *, t_command),
 		fd_io_dup[0] = dup(0);
 	if (command.next_pipe[0] > 0 || command.outfile.fd > 0)
 		fd_io_dup[1] = dup(1);
-	apply_redirection(command);
+	apply_redirections(command);
+	close_redirections(shell->command_list);
 	exit_code = builtin(shell, command);
 	(dup2_close_old(fd_io_dup[0], 0), dup2_close_old(fd_io_dup[1], 1));
 	return (exit_code);
@@ -63,18 +72,6 @@ static void	reset_signals(void)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	signal(SIGTERM, SIG_DFL);
-}
-
-static void close_redirections(t_list *command_stack)
-{
-	t_command	*command;
-
-	while (command_stack) {
-		command = command_stack->content;
-		(close_fd(&command->infile.fd), close_fd(&command->outfile.fd));
-		(close_pipe(command->prev_pipe, 2), close_pipe(command->next_pipe, 2));
-		command_stack = command_stack->next;
-	}
 }
 
 static void	exec_fork(t_shell *shell, t_list *command_stack)
@@ -92,7 +89,7 @@ static void	exec_fork(t_shell *shell, t_list *command_stack)
 		exit(exec_builtin(builtin, shell, *command));
 	command->executable_path = find_exec(*command->argv, shell->env);
 	reset_signals();
-	apply_redirection(*command);
+	apply_redirections(*command);
 	close_redirections(command_stack);
 	if (command->executable_path)
 		execve(command->executable_path, command->argv, shell->env);
@@ -134,7 +131,7 @@ void	executor(t_shell *shell, t_list *command_stack)
 {
 	execution(shell, command_stack);
 	close_redirections(command_stack);
-	shell->exit_code = wait_commands(shell, *((t_command *)(ft_lstlast(command_stack)->content)));
+	shell->exit_code = wait_commands(shell);
 	errno = 0;
 	dprintf(2, "executor ended\n");
 }

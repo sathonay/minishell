@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 17:36:15 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/14 17:36:15 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/19 17:40:21 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	here_is_the_doc(t_command *command)
 	}
 }
 
-void	apply_redirection(t_command command)
+void	apply_redirections(t_command command)
 {
 	if (command.prev_pipe[1] > 0)
 		close(command.prev_pipe[1]);
@@ -51,7 +51,17 @@ void	apply_redirection(t_command command)
 		dup2_close_old(command.outfile.fd, 1);
 	else if (command.next_pipe[1] > 0)
 		dup2_close_old(command.next_pipe[1], 1);
-	dprintf(2, "redirect pipe in %s %d\n", command.argv[0], (command.prev_pipe[0]));
-	dprintf(2, "redirect pipe out %s %d\n", command.argv[0], (command.next_pipe[1]));
 }
 
+void	close_redirections(t_list *command_stack)
+{
+	t_command	*command;
+
+	while (command_stack)
+	{
+		command = command_stack->content;
+		(close_fd(&command->infile.fd), close_fd(&command->outfile.fd));
+		(close_pipe(command->prev_pipe, 2), close_pipe(command->next_pipe, 2));
+		command_stack = command_stack->next;
+	}
+}

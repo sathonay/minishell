@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_util.c                                     :+:      :+:    :+:   */
+/*   command_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 10:55:41 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/15 10:55:41 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/19 16:39:36 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	stack_args(t_command *command)
 {
-	errno == 0;
+	errno = 0;
 	command->argc = ft_lstsize(command->argv_builder);
 	command->argv = (char **) lst_to_array(command->argv_builder);
 	if (errno != 0)
