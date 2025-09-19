@@ -6,28 +6,39 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:10:55 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/15 12:22:06 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/19 12:23:34 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-//MOVE TO lst_utils.c
-static void	wait_commands(t_shell *shell, t_list *command_stack)
+static int	get_exit_status(int stat_loc)
 {
-	t_command	*command;
+	if (WIFEXITED(stat_loc))
+		return (WEXITSTATUS(stat_loc));
+	else
+		return (128 + WTERMSIG(stat_loc));
+}
 
-	while (command_stack)
+static int	wait_commands(t_shell *shell, t_command last_command)
+{
+	int exit_code;
+	int stat_loc;
+	int n_command;
+
+	exit_code = 0;
+	n_command = ft_lstsize(shell->command_list);
+	while (n_command--)
 	{
-		command = command_stack->content;
-		if (command->pid)
-			waitpid(command->pid, &shell->exit_code, 0);
-		if (WIFEXITED(shell->exit_code))
-			shell->exit_code = WEXITSTATUS(shell->exit_code);
-		(close_fd(&command->infile.fd), close_fd(&command->outfile.fd));
-		(close_pipe(command->prev_pipe, 2), close_pipe(command->next_pipe, 2));
-		command_stack = command_stack->next;
+		pid_t pid = wait(&stat_loc);
+		dprintf(2, "exited %d %d\n", pid, stat_loc);
+		if (pid == last_command.pid)
+		{
+			dprintf(2, "exited\n");
+			exit_code = get_exit_status(stat_loc);
+		}
 	}
+	return (exit_code);
 }
 
 static int	exec_builtin(int (*builtin)(t_shell *, t_command),
@@ -47,18 +58,42 @@ static int	exec_builtin(int (*builtin)(t_shell *, t_command),
 	return (exit_code);
 }
 
-static void	exec_fork(t_shell *shell, t_command *command)
+static void	reset_signals(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGTERM, SIG_DFL);
+}
+
+static void close_redirections(t_list *command_stack)
+{
+	t_command	*command;
+
+	while (command_stack) {
+		command = command_stack->content;
+		(close_fd(&command->infile.fd), close_fd(&command->outfile.fd));
+		(close_pipe(command->prev_pipe, 2), close_pipe(command->next_pipe, 2));
+		command_stack = command_stack->next;
+	}
+}
+
+static void	exec_fork(t_shell *shell, t_list *command_stack)
 {
 	int	(*builtin)(t_shell *, t_command);
+	t_command *command;
 
+	command = command_stack->content;
 	command->pid = fork();
 	if (command->pid != 0)
 		return ;
+	dprintf(2, "running %s\n", command->argv[0]);
 	builtin = find_builtin(shell, command->argv[0]);
 	if (builtin)
 		exit(exec_builtin(builtin, shell, *command));
 	command->executable_path = find_exec(*command->argv, shell->env);
+	reset_signals();
 	apply_redirection(*command);
+	close_redirections(command_stack);
 	if (command->executable_path)
 		execve(command->executable_path, command->argv, shell->env);
 	if (command->outfile.fd > 0 || command->infile.fd > 0)
@@ -67,7 +102,7 @@ static void	exec_fork(t_shell *shell, t_command *command)
 	exit (127);
 }
 
-static void	recursive_execution(t_shell *shell, t_list *command_stack)
+static void	execution(t_shell *shell, t_list *command_stack)
 {
 	int			(*builtin)(t_shell *, t_command);
 	t_command	*command;
@@ -83,18 +118,23 @@ static void	recursive_execution(t_shell *shell, t_list *command_stack)
 		shell->exit_code = exec_builtin(builtin, shell, *command);
 		return ;
 	}
-	if (command->next_pipe[1] > 0)
-		recursive_execution(shell, command_stack->next);
-	exec_fork(shell, command);
+	if (command->prev_pipe[1] > 0)
+		close(command->prev_pipe[1]);
+	exec_fork(shell, command_stack);
 	if (command->prev_pipe[0] > 0)
 		close(command->prev_pipe[0]);
 	if (command->next_pipe[1] > 0)
 		close(command->next_pipe[1]);
+	if (command_stack->next)
+		execution(shell, command_stack->next);
 }
+
 
 void	executor(t_shell *shell, t_list *command_stack)
 {
-	recursive_execution(shell, command_stack);
-	wait_commands(shell, shell->command_list);
+	execution(shell, command_stack);
+	close_redirections(command_stack);
+	shell->exit_code = wait_commands(shell, *((t_command *)(ft_lstlast(command_stack)->content)));
 	errno = 0;
+	dprintf(2, "executor ended\n");
 }

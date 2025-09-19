@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 00:38:20 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/15 08:19:59 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/17 12:37:05 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	clear_command(t_command *command)
 {
-	ft_lstclear(&command->argv_builder, free);
 	free_str_array(command->argv);
+	ft_lstclear(&command->argv_builder, NULL);
 	free_str(&command->executable_path);
 	free_str(&command->outfile.path);
 	free_str(&command->infile.path);

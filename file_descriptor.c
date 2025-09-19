@@ -6,7 +6,7 @@
 /*   By: alrey <alrey@student.42nice.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 05:38:00 by alrey             #+#    #+#             */
-/*   Updated: 2025/09/15 12:20:08 by alrey            ###   ########.fr       */
+/*   Updated: 2025/09/17 08:12:27 by alrey            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	close_pipe(int pips[2], int wclose)
 {
 	if (wclose == 2)
 	{
+		dprintf(2, "closing pipes %d %d\n", pips[0], pips[1]);
 		if (pips[0] > 0)
 			close(pips[0]);
 		if (pips[1] > 0)

@@ -51,4 +51,7 @@ void	apply_redirection(t_command command)
 		dup2_close_old(command.outfile.fd, 1);
 	else if (command.next_pipe[1] > 0)
 		dup2_close_old(command.next_pipe[1], 1);
+	dprintf(2, "redirect pipe in %s %d\n", command.argv[0], (command.prev_pipe[0]));
+	dprintf(2, "redirect pipe out %s %d\n", command.argv[0], (command.next_pipe[1]));
 }
+

@@ -14,6 +14,7 @@
 
 void	stack_args(t_command *command)
 {
+	errno == 0;
 	command->argc = ft_lstsize(command->argv_builder);
 	command->argv = (char **) lst_to_array(command->argv_builder);
 	if (errno != 0)
